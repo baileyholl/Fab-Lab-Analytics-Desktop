@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1060.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
+   <children>
+      <MenuBar prefHeight="24.0" prefWidth="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <TabPane layoutY="75.0" prefHeight="325.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="75.0">
+        <tabs>
+          <Tab closable="false" text="Checked In">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="CheckinTable" prefHeight="351.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="CIDColumn" prefWidth="126.0" text="ID" />
+                            <TableColumn fx:id="CNameColumn" prefWidth="195.0" text="Name" />
+                              <TableColumn fx:id="CTimestampColumn" prefWidth="141.0" text="Timestamp" />
+                              <TableColumn fx:id="CCertificationsColumn" prefWidth="266.0" text="Certifications" />
+                              <TableColumn fx:id="CNotesColumn" minWidth="0.0" prefWidth="336.0" text="Notes" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab closable="false" text="Directory">
+            <content>
+              <AnchorPane>
+                     <children>
+                        <TableView fx:id="DirectoryTable" prefHeight="351.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <columns>
+                              <TableColumn fx:id="DIDColumn" prefWidth="91.0" text="ID" />
+                              <TableColumn fx:id="DNameColumn" prefWidth="168.0" text="Name" />
+                              <TableColumn fx:id="DEmailColumn" prefWidth="144.0" text="Email" />
+                              <TableColumn fx:id="DCertificationsColumn" prefWidth="244.0" text="Certifications" />
+                              <TableColumn fx:id="DNotesColumn" minWidth="0.0" prefWidth="252.0" text="Notes" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <AnchorPane layoutY="25.0" prefHeight="50.0" prefWidth="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Button fx:id="signInButton" layoutX="259.0" layoutY="15.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Sign In/Out" />
+            <TextField fx:id="idField" layoutX="18.0" layoutY="13.0" prefHeight="29.0" prefWidth="207.0" promptText="Swipe ID" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
