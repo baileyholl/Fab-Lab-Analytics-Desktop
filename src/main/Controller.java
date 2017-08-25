@@ -54,7 +54,7 @@ public class Controller implements Initializable{
     Button signInButton;
     @FXML
     TextField idField;
-
+    static String idValue;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -93,20 +93,19 @@ public class Controller implements Initializable{
                 if(p.getCardNumber().equals(text)){
                     checkedInData.add(p);
                     System.out.println("Person found");
-                    break;
-                }else{
-                    System.out.println("Person not found");
-
-                    try {
-                        AddController.root = FXMLLoader.load(getClass().getResource("entry.fxml"));
-                        AddController.stage.setTitle("Add New User");
-                        AddController.stage.setScene(new Scene(AddController.root, 250  , 250));
-                        AddController.stage.setResizable(false);
-                        AddController.stage.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    return;
                 }
+            }
+            System.out.println("Person not found");
+            try {
+                idValue = idField.getText();
+                AddController.root = FXMLLoader.load(getClass().getResource("entry.fxml"));
+                AddController.stage.setTitle("Add New User");
+                AddController.stage.setScene(new Scene(AddController.root, 250  , 250));
+                AddController.stage.setResizable(false);
+                AddController.stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

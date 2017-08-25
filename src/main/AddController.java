@@ -46,7 +46,7 @@ public class AddController implements Initializable {
 
     private void addPersonToDirectory() {
         if(!idNumberField.getText().isEmpty() && !nameField.getText().isEmpty()){
-            Person person = new Person("1234", idNumberField.getText(),nameField.getText(), emailField.getText(), certsField.getText(), notesField.getText());
+            Person person = new Person(Controller.idValue, idNumberField.getText(),nameField.getText(), emailField.getText(), certsField.getText(), notesField.getText());
             Controller.rawDirectoryData.add(person);
             Controller.directoryData.add(person);
             Controller.checkedInData.add(person);
