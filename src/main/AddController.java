@@ -50,6 +50,7 @@ public class AddController implements Initializable {
             Controller.rawDirectoryData.add(person);
             Controller.directoryData.add(person);
             Controller.checkedInData.add(person);
+            FileManager.createNewDirectoryFile(person);
             if(!remainOpenCheck.isSelected()){
                 idNumberField.clear();
                 nameField.clear();

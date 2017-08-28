@@ -9,14 +9,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -54,6 +54,9 @@ public class Controller implements Initializable{
     Button signInButton;
     @FXML
     TextField idField;
+    @FXML
+    MenuItem openFolderMenuButton;
+
     static String idValue;
 
     @Override
@@ -70,14 +73,18 @@ public class Controller implements Initializable{
         DCertificationsColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("certifications"));
         DEmailColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("email"));
         DNotesColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("notes"));
-        Person bailey  = new Person("111", "112",
-                "Bailey", "Baileyh@gmail.com", "Table saw", "bad student");
-        rawDirectoryData.add(bailey);
+        rawDirectoryData.addAll(Constants.directory.getAllPersons());
         directoryData.setAll(rawDirectoryData);
         signInButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 handleSignIn();
+            }
+        });
+        openFolderMenuButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                openFolderExplorer();
             }
         });
         CheckinTable.setItems(checkedInData);
@@ -107,6 +114,13 @@ public class Controller implements Initializable{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+    private void openFolderExplorer() {
+        try {
+            Desktop.getDesktop().open(Constants.mainFolder);
+        }catch(IOException e){
+            e.printStackTrace();
         }
     }
 }
