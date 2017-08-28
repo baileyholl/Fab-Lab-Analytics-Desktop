@@ -19,6 +19,9 @@ import java.util.ResourceBundle;
 public class AddController implements Initializable {
     static Stage stage = new Stage();
     static Parent root;
+    static ICallback iCallback;
+    @FXML
+    TextField inputField;
     @FXML
     TextField idNumberField;
     @FXML
@@ -33,15 +36,12 @@ public class AddController implements Initializable {
     Button okButton;
     @FXML
     Button cancelButton;
-    @FXML
-    CheckBox remainOpenCheck;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        okButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                addPersonToDirectory();
-            }
-        });
+        inputField.setText(Controller.idValue);
+        okButton.setOnAction(event -> addPersonToDirectory());
+        cancelButton.setOnAction(event -> close());
     }
 
     private void addPersonToDirectory() {
@@ -51,15 +51,16 @@ public class AddController implements Initializable {
             Controller.directoryData.add(person);
             Controller.checkedInData.add(person);
             FileManager.createNewDirectoryFile(person);
-            if(!remainOpenCheck.isSelected()){
-                idNumberField.clear();
-                nameField.clear();
-                emailField.clear();
-                certsField.clear();
-                notesField.clear();
-                stage.close();
-                System.out.println("Closing");
-            }
+            close();
+            if(iCallback != null) iCallback.Callback();
         }
+    }
+    private void close(){
+        idNumberField.clear();
+        nameField.clear();
+        emailField.clear();
+        certsField.clear();
+        notesField.clear();
+        stage.close();
     }
 }

@@ -1,5 +1,6 @@
 package main;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,7 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable{
+public class Controller implements Initializable, ICallback{
     public static ObservableList<Person> checkedInData = FXCollections.observableArrayList();
     public static ObservableList<Person> directoryData = FXCollections.observableArrayList();
     static ArrayList<Person> rawDirectoryData;
@@ -55,7 +56,13 @@ public class Controller implements Initializable{
     @FXML
     TextField idField;
     @FXML
+    Tab directoryTab;
+    @FXML
+    Tab checkedInTab;
+    @FXML
     MenuItem openFolderMenuButton;
+    @FXML
+    MenuItem addMenuItem;
 
     static String idValue;
 
@@ -75,45 +82,44 @@ public class Controller implements Initializable{
         DNotesColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("notes"));
         rawDirectoryData.addAll(Constants.directory.getAllPersons());
         directoryData.setAll(rawDirectoryData);
-        signInButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                handleSignIn();
-            }
-        });
-        openFolderMenuButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                openFolderExplorer();
-            }
-        });
+        signInButton.setOnAction(event -> handleSignIn());
+        openFolderMenuButton.setOnAction(event -> openFolderExplorer());
+        addMenuItem.setOnAction(event -> openAddWindow(""));
+        directoryTab.setOnSelectionChanged(event -> refocusIdField());
         CheckinTable.setItems(checkedInData);
         DirectoryTable.setItems(directoryData);
+        Platform.runLater(() -> idField.requestFocus());
     }
 
 
     private void handleSignIn(){
-        String text = idField.getText();
-        if(!text.isEmpty()) {
-            System.out.println(text);
+        if(!idField.getText().isEmpty()) {
+            System.out.println(idField.getText());
             for(Person p : rawDirectoryData){
-                if(p.getCardNumber().equals(text)){
+                if(p.getCardNumber().equals(idField.getText())){
                     checkedInData.add(p);
                     System.out.println("Person found");
                     return;
                 }
             }
             System.out.println("Person not found");
-            try {
-                idValue = idField.getText();
-                AddController.root = FXMLLoader.load(getClass().getResource("entry.fxml"));
-                AddController.stage.setTitle("Add New User");
-                AddController.stage.setScene(new Scene(AddController.root, 250  , 250));
-                AddController.stage.setResizable(false);
-                AddController.stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            openAddWindow(idField.getText());
+        }else{
+            refocusIdField();
+        }
+    }
+
+    private void openAddWindow(String input){
+        try {
+            idValue = input;
+            AddController.root = FXMLLoader.load(getClass().getResource("entry.fxml"));
+            AddController.stage.setTitle("Add New User");
+            AddController.stage.setScene(new Scene(AddController.root, 250  , 250));
+            AddController.stage.setResizable(false);
+            AddController.stage.show();
+            AddController.iCallback = this;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     private void openFolderExplorer() {
@@ -122,5 +128,17 @@ public class Controller implements Initializable{
         }catch(IOException e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void Callback() {
+        refocusIdField();
+    }
+    public void test(){
+        System.out.println("test");
+    }
+
+    public void refocusIdField(){
+        idField.requestFocus();
     }
 }
