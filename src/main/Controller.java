@@ -67,7 +67,8 @@ public class Controller implements Initializable, ICallback{
     MenuItem deleteMenuItem;
     @FXML
     MenuItem editMenuItem;
-
+    @FXML
+    MenuItem forceSignInOutMenuItem;
     static String idValue;
     static Person selectedPerson;
     static boolean editMode;
@@ -88,14 +89,33 @@ public class Controller implements Initializable, ICallback{
         rawDirectoryData.addAll(Constants.directory.getAllPersons());
         directoryData.setAll(rawDirectoryData);
         signInButton.setOnAction(event -> handleSignIn());
+        idField.setOnAction(event -> handleSignIn());
         openFolderMenuButton.setOnAction(event -> openFolderExplorer());
         addMenuItem.setOnAction(event -> openAddWindow(""));
         editMenuItem.setOnAction(event-> editSelected());
+        deleteMenuItem.setOnAction(event -> deleteSelected());
+        forceSignInOutMenuItem.setOnAction(event -> forceSignInOut());
         directoryTab.setOnSelectionChanged(event -> refocusIdField(true));
         checkedInTab.setOnSelectionChanged(event -> refocusIdField(true));
         CheckinTable.setItems(checkedInData);
         DirectoryTable.setItems(directoryData);
         Platform.runLater(() -> idField.requestFocus());
+    }
+
+    private void deleteSelected() {
+        if(DirectoryTable.isFocused()){
+            int index = DirectoryTable.getSelectionModel().getFocusedIndex();
+            selectedPerson = DirectoryTable.getItems().get(index);
+        }else if(CheckinTable.isFocused()){
+            int index = CheckinTable.getSelectionModel().getFocusedIndex();
+            selectedPerson = CheckinTable.getItems().get(index);
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + selectedPerson.getName() + " from directory and check in permanently?");
+        alert.showAndWait();
+        if(alert.getResult() == ButtonType.OK){
+            System.out.println("Attempting delete");
+            AddController.deletePerson(selectedPerson);
+        }
     }
 
     private void editSelected() {
@@ -104,17 +124,24 @@ public class Controller implements Initializable, ICallback{
             selectedPerson = DirectoryTable.getItems().get(index);
             editMode = true;
             openAddWindow(selectedPerson.getCardNumber());
+        }else if(CheckinTable.isFocused()){
+            int index = CheckinTable.getSelectionModel().getFocusedIndex();
+            selectedPerson = CheckinTable.getItems().get(index);
+            editMode = true;
+            openAddWindow(selectedPerson.getCardNumber());
         }
     }
 
 
     private void handleSignIn(){
-        if(!idField.getText().isEmpty()) {
-            System.out.println(idField.getText());
+        String idText = idField.getText();
+        idField.setText("");
+        if(!idText.isEmpty()) {
+            System.out.println(idText);
             selectedPerson = null;
             editMode = false;
             for(Person p : rawDirectoryData){
-                if(p.getCardNumber().equals(idField.getText())){
+                if(p.getCardNumber().equals(idText)){
                     System.out.println("Person found");
                     if(checkedInData.contains(p)){
                         checkedInData.remove(p);
@@ -125,7 +152,7 @@ public class Controller implements Initializable, ICallback{
                 }
             }
             System.out.println("Person not found");
-            openAddWindow(idField.getText());
+            openAddWindow(idText);
         }else{
             refocusIdField(false);
         }
@@ -151,12 +178,23 @@ public class Controller implements Initializable, ICallback{
             e.printStackTrace();
         }
     }
+    private void forceSignInOut() {
+        if(CheckinTable.isFocused()){
+            checkedInData.remove(CheckinTable.getItems().get(CheckinTable.getSelectionModel().getFocusedIndex()));
+            return;
+        }if(DirectoryTable.isFocused()){
+            Person person = DirectoryTable.getItems().get(DirectoryTable.getSelectionModel().getFocusedIndex());
+            idField.setText(person.getCardNumber());
+            handleSignIn();
+        }
+    }
 
     @Override
     public void Callback() {
         refocusIdField(false);
         selectedPerson = null;
         editMode = false;
+        idField.setText("");
     }
 
     private void refocusIdField(boolean runLater){

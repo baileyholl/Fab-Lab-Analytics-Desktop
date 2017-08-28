@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FLA:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/FLA_jar</output-path>
+    <root id="archive" name="FLA.jar">
+      <element id="module-output" name="FLA" />
+    </root>
+  </artifact>
+</component>
