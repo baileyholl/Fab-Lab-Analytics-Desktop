@@ -63,9 +63,14 @@ public class Controller implements Initializable, ICallback{
     MenuItem openFolderMenuButton;
     @FXML
     MenuItem addMenuItem;
+    @FXML
+    MenuItem deleteMenuItem;
+    @FXML
+    MenuItem editMenuItem;
 
     static String idValue;
-
+    static Person selectedPerson;
+    static boolean editMode;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         rawDirectoryData = new ArrayList<Person>();
@@ -85,27 +90,44 @@ public class Controller implements Initializable, ICallback{
         signInButton.setOnAction(event -> handleSignIn());
         openFolderMenuButton.setOnAction(event -> openFolderExplorer());
         addMenuItem.setOnAction(event -> openAddWindow(""));
-        directoryTab.setOnSelectionChanged(event -> refocusIdField());
+        editMenuItem.setOnAction(event-> editSelected());
+        directoryTab.setOnSelectionChanged(event -> refocusIdField(true));
+        checkedInTab.setOnSelectionChanged(event -> refocusIdField(true));
         CheckinTable.setItems(checkedInData);
         DirectoryTable.setItems(directoryData);
         Platform.runLater(() -> idField.requestFocus());
+    }
+
+    private void editSelected() {
+        if(DirectoryTable.isFocused()){
+            int index = DirectoryTable.getSelectionModel().getFocusedIndex();
+            selectedPerson = DirectoryTable.getItems().get(index);
+            editMode = true;
+            openAddWindow(selectedPerson.getCardNumber());
+        }
     }
 
 
     private void handleSignIn(){
         if(!idField.getText().isEmpty()) {
             System.out.println(idField.getText());
+            selectedPerson = null;
+            editMode = false;
             for(Person p : rawDirectoryData){
                 if(p.getCardNumber().equals(idField.getText())){
-                    checkedInData.add(p);
                     System.out.println("Person found");
+                    if(checkedInData.contains(p)){
+                        checkedInData.remove(p);
+                    }else{
+                        checkedInData.add(p);
+                    }
                     return;
                 }
             }
             System.out.println("Person not found");
             openAddWindow(idField.getText());
         }else{
-            refocusIdField();
+            refocusIdField(false);
         }
     }
 
@@ -132,13 +154,17 @@ public class Controller implements Initializable, ICallback{
 
     @Override
     public void Callback() {
-        refocusIdField();
-    }
-    public void test(){
-        System.out.println("test");
+        refocusIdField(false);
+        selectedPerson = null;
+        editMode = false;
     }
 
-    public void refocusIdField(){
+    private void refocusIdField(boolean runLater){
+        if(runLater){
+            Platform.runLater(()-> idField.requestFocus());
+            return;
+        }
+        System.out.println("Attempt refocus");
         idField.requestFocus();
     }
 }

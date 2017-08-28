@@ -36,17 +36,34 @@ public class AddController implements Initializable {
     Button okButton;
     @FXML
     Button cancelButton;
-
+    private String oldInput;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         inputField.setText(Controller.idValue);
+        if(Controller.selectedPerson != null){
+            Person p = Controller.selectedPerson;
+            inputField.setText(p.getCardNumber());
+            oldInput = p.getCardNumber();
+            nameField.setText(p.getName());
+            idNumberField.setText(p.getId());
+            certsField.setText(p.getCertifications());
+            notesField.setText(p.getNotes());
+            emailField.setText(p.getEmail());
+        }
         okButton.setOnAction(event -> addPersonToDirectory());
         cancelButton.setOnAction(event -> close());
     }
 
     private void addPersonToDirectory() {
         if(!idNumberField.getText().isEmpty() && !nameField.getText().isEmpty()){
-            Person person = new Person(Controller.idValue, idNumberField.getText(),nameField.getText(), emailField.getText(), certsField.getText(), notesField.getText());
+            Person person = new Person(inputField.getText(), idNumberField.getText(),nameField.getText(), emailField.getText(), certsField.getText(), notesField.getText());
+            if(Controller.editMode && Controller.selectedPerson != null){
+                Controller.rawDirectoryData.remove(Controller.selectedPerson);
+                Controller.directoryData.remove(Controller.selectedPerson);
+                Controller.checkedInData.remove(Controller.selectedPerson);
+                System.out.println(Constants.directory.remove(oldInput));
+                FileManager.deleteDirectoryFile(Controller.selectedPerson);
+            }
             Controller.rawDirectoryData.add(person);
             Controller.directoryData.add(person);
             Controller.checkedInData.add(person);
@@ -62,5 +79,6 @@ public class AddController implements Initializable {
         certsField.clear();
         notesField.clear();
         stage.close();
+        if(iCallback != null) iCallback.Callback();
     }
 }

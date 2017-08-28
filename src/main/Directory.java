@@ -38,4 +38,7 @@ public class Directory {
     public Collection<Person> getAllPersons(){
         return directory.values();
     }
+    public Person remove(Object key){
+        return directory.remove(key);
+    }
 }

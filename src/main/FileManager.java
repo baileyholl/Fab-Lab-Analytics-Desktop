@@ -74,4 +74,15 @@ public class FileManager {
         }
         return allFiles;
     }
+
+    public static boolean deleteDirectoryFile(Person selectedPerson) {
+        Path path = Paths.get(Constants.directoryFolder.toString(), selectedPerson.getName().replace(" ", "_")+selectedPerson.getId()+".txt");
+        try{
+            if(path != null) Files.delete(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }
