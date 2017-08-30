@@ -1,5 +1,7 @@
 package main;
 
+import com.google.gson.Gson;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -64,6 +66,17 @@ public class FileManager {
             return false;
         }
         return  true;
+    }
+
+    public static void createDirectoryJsonFile(Person person) {
+        Gson gson = new Gson();
+        Path path = Paths.get(Constants.directoryFolder.toString(), person.getName().replace(" ", "_")+person.getId()+".json");
+        PrintWriter printWriter = null;
+        try {
+            gson.toJson(person, new FileWriter(path.toString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static File[] getAllFilesAtPath(File path){

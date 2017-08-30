@@ -20,6 +20,8 @@ public class Main extends Application {
     private void setupFiles(){
         FileManager.setupFolders();
         Constants.directory = new Directory(Constants.directoryFiles);
+        Person person = new Person("1", "1", "Bailey", "baielyh@gmail", "certs","notes");
+        FileManager.createDirectoryJsonFile(person);
     }
 
 
