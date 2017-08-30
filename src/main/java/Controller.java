@@ -10,14 +10,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.joda.time.DateTime;
+import util.LogManager;
 
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class Controller implements Initializable, ICallback{
     public static ObservableList<Person> checkedInData = FXCollections.observableArrayList();
@@ -65,6 +67,9 @@ public class Controller implements Initializable, ICallback{
     MenuItem editMenuItem;
     @FXML
     MenuItem forceSignInOutMenuItem;
+    @FXML
+    TextArea logTextArea;
+
     static String idValue;
     static Person selectedPerson;
     static boolean editMode;
@@ -84,8 +89,8 @@ public class Controller implements Initializable, ICallback{
         DNotesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
         rawDirectoryData.addAll(Constants.directory.getAllPersons());
         directoryData.setAll(rawDirectoryData);
-        signInButton.setOnAction(event -> handleSignIn());
-        idField.setOnAction(event -> handleSignIn());
+        signInButton.setOnAction(event -> handleSwipe(false));
+        idField.setOnAction(event -> handleSwipe(false));
         openFolderMenuButton.setOnAction(event -> openFolderExplorer());
         addMenuItem.setOnAction(event -> openAddWindow(""));
         editMenuItem.setOnAction(event-> editSelected());
@@ -95,6 +100,7 @@ public class Controller implements Initializable, ICallback{
         checkedInTab.setOnSelectionChanged(event -> refocusIdField(true));
         CheckinTable.setItems(checkedInData);
         DirectoryTable.setItems(directoryData);
+        logTextArea.setText(Constants.logContents);
         Platform.runLater(() -> idField.requestFocus());
     }
 
@@ -129,7 +135,7 @@ public class Controller implements Initializable, ICallback{
     }
 
 
-    private void handleSignIn(){
+    private void handleSwipe(boolean wasForced){
         String idText = idField.getText();
         idField.setText("");
         if(!idText.isEmpty()) {
@@ -138,12 +144,12 @@ public class Controller implements Initializable, ICallback{
             editMode = false;
             for(Person p : rawDirectoryData){
                 if(p.getCardNumber().equals(idText)){
-                    System.out.println("Person found");
                     if(checkedInData.contains(p)){
-                        checkedInData.remove(p);
+                        signOut(p, wasForced);
                     }else{
-                        checkedInData.add(p);
+                        signIn(p, wasForced);
                     }
+                    loadLogText();
                     return;
                 }
             }
@@ -152,6 +158,16 @@ public class Controller implements Initializable, ICallback{
         }else{
             refocusIdField(false);
         }
+    }
+
+    private void signOut(Person p, boolean forced){
+        checkedInData.remove(p);
+        LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed out(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed out with " + "ID: " + p.getId());
+    }
+    private void signIn(Person p, boolean forced){
+        checkedInData.add(p);
+        p.setTimestampProperty(Constants.dateTimeFormatter.print(DateTime.now()));
+        LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed in(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed in with " + "ID: " + p.getId());
     }
 
     private void openAddWindow(String input){
@@ -174,14 +190,16 @@ public class Controller implements Initializable, ICallback{
             e.printStackTrace();
         }
     }
+
     private void forceSignInOut() {
         if(CheckinTable.isFocused()){
-            checkedInData.remove(CheckinTable.getItems().get(CheckinTable.getSelectionModel().getFocusedIndex()));
-            return;
-        }if(DirectoryTable.isFocused()){
+            Person person = CheckinTable.getItems().get(CheckinTable.getSelectionModel().getFocusedIndex());
+            idField.setText(person.getCardNumber());
+            handleSwipe(true);
+        }else if(DirectoryTable.isFocused()){
             Person person = DirectoryTable.getItems().get(DirectoryTable.getSelectionModel().getFocusedIndex());
             idField.setText(person.getCardNumber());
-            handleSignIn();
+            handleSwipe(true);
         }
     }
 
@@ -200,5 +218,8 @@ public class Controller implements Initializable, ICallback{
         }
         System.out.println("Attempt refocus");
         idField.requestFocus();
+    }
+    private void loadLogText(){
+        logTextArea.setText(Constants.logContents);
     }
 }

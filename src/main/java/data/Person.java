@@ -5,16 +5,17 @@ import javafx.beans.property.SimpleStringProperty;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class Person {
-    private transient DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
     private SimpleStringProperty cardNumber;
     private SimpleStringProperty id;
     private SimpleStringProperty name;
     private SimpleStringProperty email;
     private SimpleStringProperty certifications;
     private SimpleStringProperty notes;
-    private SimpleStringProperty timestamp;
+    private transient SimpleStringProperty timestamp;
     private SimpleStringProperty timesVisited;
 
     public Person(String cardNumber, String ID, String name, String email, String certifications, String notes){
@@ -24,7 +25,8 @@ public class Person {
         this.email = new SimpleStringProperty(email);
         this.certifications = new SimpleStringProperty(certifications);
         this.notes = new SimpleStringProperty(notes);
-        this.timestamp = new SimpleStringProperty(dateFormat.format(new Date()));
+        //this.timestamp = new SimpleStringProperty(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(Constants.calendar.getTime()));
+        this.timestamp = new SimpleStringProperty(new SimpleDateFormat("dd MM yyyy HH:mm:ss").format(new GregorianCalendar().getTime()));
     }
 
     private void incrementTimesVisited(){
@@ -79,7 +81,12 @@ public class Person {
     public SimpleStringProperty timestampProperty() {
         return timestamp;
     }
-
+    public void setTimestampProperty(SimpleStringProperty simpleStringProperty){
+        this.timestamp = simpleStringProperty;
+    }
+    public void setTimestampProperty(String string){
+        this.timestamp = new SimpleStringProperty(string);
+    }
     public String getId() {
         return id.get();
     }
