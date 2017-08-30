@@ -1,5 +1,5 @@
-package main;
-
+import data.Constants;
+import data.Person;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,8 +12,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import main.data.Constants;
-import main.data.Person;
 
 import java.awt.*;
 import java.io.IOException;
@@ -159,7 +157,7 @@ public class Controller implements Initializable, ICallback{
     private void openAddWindow(String input){
         try {
             idValue = input;
-            AddController.root = FXMLLoader.load(getClass().getResource("resources/entry.fxml"));
+            AddController.root = FXMLLoader.load(getClass().getResource("entry.fxml"));
             AddController.stage.setTitle("Add New User");
             AddController.stage.setScene(new Scene(AddController.root, 250  , 250));
             AddController.stage.setResizable(false);

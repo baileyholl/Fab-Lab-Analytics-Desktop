@@ -1,10 +1,11 @@
-package main.data;
+package data;
 
 import com.google.gson.Gson;
-import main.data.Person;
-import main.util.FileManager;
+import util.FileManager;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;

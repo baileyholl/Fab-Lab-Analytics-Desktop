@@ -1,4 +1,4 @@
-package main.data;
+package data;
 
 import javafx.beans.property.SimpleStringProperty;
 
@@ -15,6 +15,7 @@ public class Person {
     private SimpleStringProperty certifications;
     private SimpleStringProperty notes;
     private SimpleStringProperty timestamp;
+    private SimpleStringProperty timesVisited;
 
     public Person(String cardNumber, String ID, String name, String email, String certifications, String notes){
         this.cardNumber = new SimpleStringProperty(cardNumber);
@@ -26,6 +27,9 @@ public class Person {
         this.timestamp = new SimpleStringProperty(dateFormat.format(new Date()));
     }
 
+    private void incrementTimesVisited(){
+        timesVisited.set(String.valueOf(Integer.valueOf(getTimesVisited()) + 1));
+    }
 
     public String getName() {
         return name.get();
@@ -82,5 +86,13 @@ public class Person {
 
     public SimpleStringProperty idProperty() {
         return id;
+    }
+
+    public String getTimesVisited() {
+        return timesVisited.get();
+    }
+
+    public SimpleStringProperty timesVisitedProperty() {
+        return timesVisited;
     }
 }

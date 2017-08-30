@@ -1,10 +1,13 @@
-package main.util;
+package util;
 
 import com.google.gson.Gson;
-import main.data.Constants;
-import main.data.Person;
+import data.Constants;
+import data.Person;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
