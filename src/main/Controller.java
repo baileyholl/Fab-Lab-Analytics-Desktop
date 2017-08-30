@@ -3,19 +3,17 @@ package main;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
+import main.data.Constants;
+import main.data.Person;
 
 import java.awt.*;
 import java.io.IOException;
@@ -74,18 +72,18 @@ public class Controller implements Initializable, ICallback{
     static boolean editMode;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        rawDirectoryData = new ArrayList<Person>();
-        CIDColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("id"));
-        CNameColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("name"));
-        CCertificationsColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("certifications"));
-        CTimestampColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("timestamp"));
-        CNotesColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("notes"));
+        rawDirectoryData = new ArrayList<>();
+        CIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        CNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        CCertificationsColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
+        CTimestampColumn.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
+        CNotesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
 
-        DIDColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("id"));
-        DNameColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("name"));
-        DCertificationsColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("certifications"));
-        DEmailColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("email"));
-        DNotesColumn.setCellValueFactory(new PropertyValueFactory<Person, String>("notes"));
+        DIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        DNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        DCertificationsColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
+        DEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        DNotesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
         rawDirectoryData.addAll(Constants.directory.getAllPersons());
         directoryData.setAll(rawDirectoryData);
         signInButton.setOnAction(event -> handleSignIn());
@@ -161,7 +159,7 @@ public class Controller implements Initializable, ICallback{
     private void openAddWindow(String input){
         try {
             idValue = input;
-            AddController.root = FXMLLoader.load(getClass().getResource("entry.fxml"));
+            AddController.root = FXMLLoader.load(getClass().getResource("resources/entry.fxml"));
             AddController.stage.setTitle("Add New User");
             AddController.stage.setScene(new Scene(AddController.root, 250  , 250));
             AddController.stage.setResizable(false);

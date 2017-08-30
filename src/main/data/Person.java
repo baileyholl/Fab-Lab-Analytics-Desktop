@@ -1,4 +1,4 @@
-package main;
+package main.data;
 
 import javafx.beans.property.SimpleStringProperty;
 
@@ -7,14 +7,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Person {
-    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-    private final SimpleStringProperty cardNumber;
-    private final SimpleStringProperty id;
-    private final SimpleStringProperty name;
-    private final SimpleStringProperty email;
-    private final SimpleStringProperty certifications;
-    private final SimpleStringProperty notes;
-    private final SimpleStringProperty timestamp;
+    private transient DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private SimpleStringProperty cardNumber;
+    private SimpleStringProperty id;
+    private SimpleStringProperty name;
+    private SimpleStringProperty email;
+    private SimpleStringProperty certifications;
+    private SimpleStringProperty notes;
+    private SimpleStringProperty timestamp;
 
     public Person(String cardNumber, String ID, String name, String email, String certifications, String notes){
         this.cardNumber = new SimpleStringProperty(cardNumber);

@@ -1,6 +1,8 @@
-package main;
+package main.util;
 
 import com.google.gson.Gson;
+import main.data.Constants;
+import main.data.Person;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -55,14 +57,14 @@ public class FileManager {
         System.out.println(FileFolder);
         return FileFolder;
     }
-
+    @Deprecated
     public static boolean createNewDirectoryFile(Person person){
         List<String> lines = Arrays.asList(person.getCardNumber(), person.getName(), person.getId(), person.getEmail(), person.getCertifications(), person.getNotes(), person.getTimestamp());
         Path path = Paths.get(Constants.directoryFolder.toString(), person.getName().replace(" ", "_")+person.getId()+".txt");
         try{
             Files.write(path, lines, Charset.forName("UTF-8"));
         }catch (IOException e){
-            e.printStackTrace();
+            System.out.println(e.toString());
             return false;
         }
         return  true;
@@ -71,11 +73,13 @@ public class FileManager {
     public static void createDirectoryJsonFile(Person person) {
         Gson gson = new Gson();
         Path path = Paths.get(Constants.directoryFolder.toString(), person.getName().replace(" ", "_")+person.getId()+".json");
-        PrintWriter printWriter = null;
-        try {
-            gson.toJson(person, new FileWriter(path.toString()));
-        } catch (IOException e) {
-            e.printStackTrace();
+        deleteFile(path);
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(path.toString()))){
+            writer.write(gson.toJson(person));
+            writer.flush();
+            writer.close();
+        }catch (Exception e){
+            System.out.println(e.toString());
         }
     }
 
@@ -88,12 +92,27 @@ public class FileManager {
         return allFiles;
     }
 
-    public static boolean deleteDirectoryFile(Person selectedPerson) {
-        Path path = Paths.get(Constants.directoryFolder.toString(), selectedPerson.getName().replace(" ", "_")+selectedPerson.getId()+".txt");
+    public static boolean deleteFile(Path path){
+        try{
+            if(path != null && path.toFile().exists()){
+                Files.delete(path);
+            }else{
+                System.out.println("File does not exist");
+                System.out.println(path);
+            }
+            return true;
+        } catch (IOException e) {
+            System.out.println(e.toString());
+            return false;
+        }
+    }
+
+    public static boolean deleteDirectoryFile(Person selectedPerson, String extension) {
+        Path path = Paths.get(Constants.directoryFolder.toString(), selectedPerson.getName().replace(" ", "_")+selectedPerson.getId()+ extension);
         try{
             if(path != null) Files.delete(path);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.toString());
             return false;
         }
         return true;

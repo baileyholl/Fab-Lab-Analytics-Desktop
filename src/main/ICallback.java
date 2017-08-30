@@ -2,5 +2,5 @@ package main;
 
 public interface ICallback {
 
-    public void Callback();
+    void Callback();
 }
