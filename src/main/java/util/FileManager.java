@@ -83,7 +83,7 @@ public final class FileManager {
         return FileFolder;
     }
 
-    public static void createDirectoryJsonFile(Person person) {
+    public static void saveDirectoryJsonFile(Person person) {
         Gson gson = new Gson();
         Path path = Paths.get(Constants.directoryFolder.toString(), person.getName().replace(" ", "_")+person.getId()+".json");
         deleteFile(path);

@@ -32,7 +32,7 @@ public class Directory {
                     while((line = br.readLine())!= null){
                         lineList.add(line);
                     }
-                    directory.put(lineList.get(0), new Person(lineList.get(0), lineList.get(2), lineList.get(1), lineList.get(3), lineList.get(4), lineList.get(5)));
+                    directory.put(lineList.get(0), new Person(lineList.get(0), lineList.get(2), lineList.get(1), lineList.get(3), lineList.get(4), lineList.get(5), "0"));
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -48,10 +48,25 @@ public class Directory {
                     Gson gson = new Gson();
                     //convert the json string back to object
                     Person person = gson.fromJson(br, Person.class);
+                    validateUpToDateJson(person);
                     directory.put(person.getCardNumber(), person);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
+            }
+        }
+    }
+
+    /**
+     * Used to bring older versions of the json database up to date.
+     * @param person Person object to be validated
+     */
+    private void validateUpToDateJson(Person person){
+        if(person != null) {
+            if ((person.strikesProperty() == null || person.getStrikes() == null))
+                person.setStrikesProperty("0");
+            if(person.timesVisitedProperty() == null || person.getTimesVisited() == null){
+                person.setTimesVisitedProperty("0");
             }
         }
     }
@@ -69,8 +84,8 @@ public class Directory {
                     while((line = br.readLine())!= null){
                         lineList.add(line);
                     }
-                    Person person = new Person(lineList.get(0), lineList.get(2), lineList.get(1), lineList.get(3), lineList.get(4), lineList.get(5));
-                    FileManager.createDirectoryJsonFile(person);
+                    Person person = new Person(lineList.get(0), lineList.get(2), lineList.get(1), lineList.get(3), lineList.get(4), lineList.get(5), "0");
+                    FileManager.saveDirectoryJsonFile(person);
                 }catch (IndexOutOfBoundsException ignored){
                     //Attempting to read depreacted text file system
                 }catch (Exception e){

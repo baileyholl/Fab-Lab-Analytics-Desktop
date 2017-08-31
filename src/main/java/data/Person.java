@@ -1,6 +1,8 @@
 package data;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import org.joda.time.DateTime;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,16 +19,18 @@ public class Person {
     private SimpleStringProperty notes;
     private transient SimpleStringProperty timestamp;
     private SimpleStringProperty timesVisited;
+    private SimpleStringProperty strikes;
 
-    public Person(String cardNumber, String ID, String name, String email, String certifications, String notes){
+    public Person(String cardNumber, String ID, String name, String email, String certifications, String notes, String strikes){
         this.cardNumber = new SimpleStringProperty(cardNumber);
         this.id = new SimpleStringProperty(ID);
         this.name = new SimpleStringProperty(name);
         this.email = new SimpleStringProperty(email);
         this.certifications = new SimpleStringProperty(certifications);
         this.notes = new SimpleStringProperty(notes);
-        //this.timestamp = new SimpleStringProperty(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(Constants.calendar.getTime()));
-        this.timestamp = new SimpleStringProperty(new SimpleDateFormat("dd MM yyyy HH:mm:ss").format(new GregorianCalendar().getTime()));
+        this.timestamp = new SimpleStringProperty(Constants.dateTimeFormatter.print(DateTime.now()));
+        this.timesVisited = new SimpleStringProperty("0");
+        this.strikes = new SimpleStringProperty(strikes);
     }
 
     private void incrementTimesVisited(){
@@ -87,6 +91,7 @@ public class Person {
     public void setTimestampProperty(String string){
         this.timestamp = new SimpleStringProperty(string);
     }
+
     public String getId() {
         return id.get();
     }
@@ -101,5 +106,21 @@ public class Person {
 
     public SimpleStringProperty timesVisitedProperty() {
         return timesVisited;
+    }
+
+    public void setTimesVisitedProperty(String string){
+        this.timesVisited = new SimpleStringProperty(string);
+    }
+
+    public void setStrikesProperty(String string){
+        this.strikes = new SimpleStringProperty(string);
+    }
+
+    public String getStrikes() {
+        return strikes.get();
+    }
+
+    public SimpleStringProperty strikesProperty() {
+        return strikes;
     }
 }

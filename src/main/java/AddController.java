@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import util.FileManager;
+import util.LogManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,6 +29,8 @@ public class AddController implements Initializable {
     @FXML
     TextField notesField;
     @FXML
+    TextField strikesField;
+    @FXML
     Button okButton;
     @FXML
     Button cancelButton;
@@ -35,6 +38,7 @@ public class AddController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         inputField.setText(Controller.idValue);
+        strikesField.setText("0");
         if(Controller.selectedPerson != null){
             Person p = Controller.selectedPerson;
             inputField.setText(p.getCardNumber());
@@ -44,6 +48,7 @@ public class AddController implements Initializable {
             certsField.setText(p.getCertifications());
             notesField.setText(p.getNotes());
             emailField.setText(p.getEmail());
+            strikesField.setText(p.getStrikes());
         }
         notesField.setOnAction(event -> addPersonToDirectory());
         inputField.setOnAction(event -> addPersonToDirectory());
@@ -57,14 +62,15 @@ public class AddController implements Initializable {
 
     private void addPersonToDirectory() {
         if(!idNumberField.getText().isEmpty() && !nameField.getText().isEmpty()){
-            Person person = new Person(inputField.getText(), idNumberField.getText(),nameField.getText(), emailField.getText(), certsField.getText(), notesField.getText());
+            Person person = new Person(inputField.getText(), idNumberField.getText(),nameField.getText(), emailField.getText(),
+                    certsField.getText(), notesField.getText(), strikesField.getText());
             if(Controller.editMode && Controller.selectedPerson != null){
                 deletePerson(Controller.selectedPerson);
             }
             Controller.rawDirectoryData.add(person);
             Controller.directoryData.add(person);
             Controller.checkedInData.add(person);
-            FileManager.createDirectoryJsonFile(person);
+            FileManager.saveDirectoryJsonFile(person);
             close();
             if(iCallback != null) iCallback.Callback();
         }else{
@@ -78,7 +84,6 @@ public class AddController implements Initializable {
         Controller.directoryData.remove(person);
         Controller.checkedInData.remove(person);
         FileManager.deleteDirectoryFile(person, ".json");
-        FileManager.deleteDirectoryFile(person, ".txt");
     }
 
     private void close(){
@@ -87,6 +92,7 @@ public class AddController implements Initializable {
         emailField.clear();
         certsField.clear();
         notesField.clear();
+        strikesField.clear();
         stage.close();
         if(iCallback != null) iCallback.Callback();
     }

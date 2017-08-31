@@ -40,6 +40,10 @@ public class Controller implements Initializable, ICallback{
     @FXML
     TableColumn<Person, String> CNotesColumn;
     @FXML
+    TableColumn<Person, String> CStrikesColumn;
+    @FXML
+    TableColumn<Person, String> CVisitColumn;
+    @FXML
     TableColumn<Person, String> DIDColumn;
     @FXML
     TableColumn<Person, String> DNameColumn;
@@ -49,6 +53,10 @@ public class Controller implements Initializable, ICallback{
     TableColumn<Person, String> DCertificationsColumn;
     @FXML
     TableColumn<Person, String> DNotesColumn;
+    @FXML
+    TableColumn<Person, String> DStrikesColumn;
+    @FXML
+    TableColumn<Person, String> DVisitColumn;
     @FXML
     Button signInButton;
     @FXML
@@ -81,12 +89,15 @@ public class Controller implements Initializable, ICallback{
         CCertificationsColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
         CTimestampColumn.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
         CNotesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
-
+        CStrikesColumn.setCellValueFactory(new PropertyValueFactory<>("strikes"));
+        CVisitColumn.setCellValueFactory(new PropertyValueFactory<>("timesVisited"));
         DIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         DNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         DCertificationsColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
         DEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         DNotesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
+        DStrikesColumn.setCellValueFactory(new PropertyValueFactory<>("strikes"));
+        DVisitColumn.setCellValueFactory(new PropertyValueFactory<>("timesVisited"));
         rawDirectoryData.addAll(Constants.directory.getAllPersons());
         directoryData.setAll(rawDirectoryData);
         signInButton.setOnAction(event -> handleSwipe(false));
@@ -105,35 +116,38 @@ public class Controller implements Initializable, ICallback{
     }
 
     private void deleteSelected() {
-        if(DirectoryTable.isFocused()){
-            int index = DirectoryTable.getSelectionModel().getFocusedIndex();
-            selectedPerson = DirectoryTable.getItems().get(index);
-        }else if(CheckinTable.isFocused()){
-            int index = CheckinTable.getSelectionModel().getFocusedIndex();
-            selectedPerson = CheckinTable.getItems().get(index);
-        }
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + selectedPerson.getName() + " from directory and check in permanently?");
-        alert.showAndWait();
-        if(alert.getResult() == ButtonType.OK){
-            System.out.println("Attempting delete");
-            AddController.deletePerson(selectedPerson);
+        TableView<Person> tableView = getFocusedTableView();
+        if(tableView != null) {
+            int index = tableView.getSelectionModel().getFocusedIndex();
+            selectedPerson = tableView.getItems().get(index);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + selectedPerson.getName() + " from directory and check in permanently?");
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                System.out.println("Attempting delete");
+                AddController.deletePerson(selectedPerson);
+            }
         }
     }
 
     private void editSelected() {
-        if(DirectoryTable.isFocused()){
-            int index = DirectoryTable.getSelectionModel().getFocusedIndex();
-            selectedPerson = DirectoryTable.getItems().get(index);
-            editMode = true;
-            openAddWindow(selectedPerson.getCardNumber());
-        }else if(CheckinTable.isFocused()){
-            int index = CheckinTable.getSelectionModel().getFocusedIndex();
-            selectedPerson = CheckinTable.getItems().get(index);
+        TableView<Person> tableView = getFocusedTableView();
+        if(tableView != null){
+            int index = tableView.getSelectionModel().getFocusedIndex();
+            selectedPerson = tableView.getItems().get(index);
             editMode = true;
             openAddWindow(selectedPerson.getCardNumber());
         }
     }
 
+    private TableView<Person> getFocusedTableView(){
+        TableView<Person> tableView = null;
+        if(DirectoryTable.isFocused()){
+            tableView = DirectoryTable;
+        }else if(CheckinTable.isFocused()){
+            tableView = CheckinTable;
+        }
+        return tableView;
+    }
 
     private void handleSwipe(boolean wasForced){
         String idText = idField.getText();
@@ -192,12 +206,9 @@ public class Controller implements Initializable, ICallback{
     }
 
     private void forceSignInOut() {
-        if(CheckinTable.isFocused()){
-            Person person = CheckinTable.getItems().get(CheckinTable.getSelectionModel().getFocusedIndex());
-            idField.setText(person.getCardNumber());
-            handleSwipe(true);
-        }else if(DirectoryTable.isFocused()){
-            Person person = DirectoryTable.getItems().get(DirectoryTable.getSelectionModel().getFocusedIndex());
+        TableView<Person> tableView = getFocusedTableView();
+        if(tableView != null) {
+            Person person = tableView.getItems().get(tableView.getSelectionModel().getFocusedIndex());
             idField.setText(person.getCardNumber());
             handleSwipe(true);
         }
@@ -212,13 +223,14 @@ public class Controller implements Initializable, ICallback{
     }
 
     private void refocusIdField(boolean runLater){
+        System.out.println("Attempt refocus");
         if(runLater){
             Platform.runLater(()-> idField.requestFocus());
             return;
         }
-        System.out.println("Attempt refocus");
         idField.requestFocus();
     }
+
     private void loadLogText(){
         logTextArea.setText(Constants.logContents);
     }
