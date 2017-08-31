@@ -66,6 +66,8 @@ public class Controller implements Initializable, ICallback{
     @FXML
     Tab checkedInTab;
     @FXML
+    Tab logTab;
+    @FXML
     MenuItem openFolderMenuButton;
     @FXML
     MenuItem addMenuItem;
@@ -109,6 +111,7 @@ public class Controller implements Initializable, ICallback{
         forceSignInOutMenuItem.setOnAction(event -> forceSignInOut());
         directoryTab.setOnSelectionChanged(event -> refocusIdField(true));
         checkedInTab.setOnSelectionChanged(event -> refocusIdField(true));
+        logTab.setOnSelectionChanged(event -> refocusIdField(true));
         CheckinTable.setItems(checkedInData);
         DirectoryTable.setItems(directoryData);
         logTextArea.setText(Constants.logContents);
@@ -163,7 +166,7 @@ public class Controller implements Initializable, ICallback{
                     }else{
                         signIn(p, wasForced);
                     }
-                    loadLogText();
+                    updateLogDisplay();
                     return;
                 }
             }
@@ -216,14 +219,18 @@ public class Controller implements Initializable, ICallback{
 
     @Override
     public void Callback() {
-        refocusIdField(false);
+        if(editMode && selectedPerson != null){
+            LogManager.appendLogWithTimeStamp(selectedPerson.getName() + " with ID: " + selectedPerson.getId() + " was edited.");
+        }
         selectedPerson = null;
         editMode = false;
         idField.setText("");
+        refocusIdField(false);
     }
 
     private void refocusIdField(boolean runLater){
         System.out.println("Attempt refocus");
+        updateLogDisplay();
         if(runLater){
             Platform.runLater(()-> idField.requestFocus());
             return;
@@ -231,7 +238,7 @@ public class Controller implements Initializable, ICallback{
         idField.requestFocus();
     }
 
-    private void loadLogText(){
+    private void updateLogDisplay(){
         logTextArea.setText(Constants.logContents);
     }
 }

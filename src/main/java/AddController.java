@@ -84,6 +84,7 @@ public class AddController implements Initializable {
         Controller.directoryData.remove(person);
         Controller.checkedInData.remove(person);
         FileManager.deleteDirectoryFile(person, ".json");
+        LogManager.appendLogWithTimeStamp(person.getName() + " with ID: " + person.getId() + " was deleted from the directory.");
     }
 
     private void close(){
