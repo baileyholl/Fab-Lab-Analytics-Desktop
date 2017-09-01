@@ -1,4 +1,6 @@
+import com.google.gson.Gson;
 import data.Constants;
+import data.Directory;
 import data.Person;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -13,18 +15,22 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.hildan.fxgson.FxGson;
 import org.joda.time.DateTime;
+import util.FileManager;
 import util.LogManager;
+import util.WebUtil;
 
 import java.awt.*;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Controller implements Initializable, ICallback{
     public static ObservableList<Person> checkedInData = FXCollections.observableArrayList();
     public static ObservableList<Person> directoryData = FXCollections.observableArrayList();
-    static ArrayList<Person> rawDirectoryData;
     @FXML
     TableView<Person> CheckinTable;
     @FXML
@@ -78,6 +84,12 @@ public class Controller implements Initializable, ICallback{
     @FXML
     MenuItem forceSignInOutMenuItem;
     @FXML
+    MenuItem conversionButton;
+    @FXML
+    MenuItem exportToCSV;
+    @FXML
+    MenuItem aboutButton;
+    @FXML
     TextArea logTextArea;
 
     static String idValue;
@@ -85,7 +97,7 @@ public class Controller implements Initializable, ICallback{
     static boolean editMode;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        rawDirectoryData = new ArrayList<>();
+        Constants.rawDirectoryData = new ArrayList<>();
         CIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         CNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         CCertificationsColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
@@ -100,8 +112,8 @@ public class Controller implements Initializable, ICallback{
         DNotesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
         DStrikesColumn.setCellValueFactory(new PropertyValueFactory<>("strikes"));
         DVisitColumn.setCellValueFactory(new PropertyValueFactory<>("timesVisited"));
-        rawDirectoryData.addAll(Constants.directory.getAllPersons());
-        directoryData.setAll(rawDirectoryData);
+        Constants.rawDirectoryData.addAll(Constants.directory.getAllPersons());
+        directoryData.setAll(Constants.rawDirectoryData);
         signInButton.setOnAction(event -> handleSwipe(false));
         idField.setOnAction(event -> handleSwipe(false));
         openFolderMenuButton.setOnAction(event -> openFolderExplorer());
@@ -112,6 +124,9 @@ public class Controller implements Initializable, ICallback{
         directoryTab.setOnSelectionChanged(event -> refocusIdField(true));
         checkedInTab.setOnSelectionChanged(event -> refocusIdField(true));
         logTab.setOnSelectionChanged(event -> refocusIdField(true));
+        exportToCSV.setOnAction(event ->  exportToCSV());
+        aboutButton.setOnAction(event -> WebUtil.openWebpage(Constants.aboutLink));
+        conversionButton.setOnAction(event -> convertOldGsons());
         CheckinTable.setItems(checkedInData);
         DirectoryTable.setItems(directoryData);
         logTextArea.setText(Constants.logContents);
@@ -126,7 +141,6 @@ public class Controller implements Initializable, ICallback{
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + selectedPerson.getName() + " from directory and check in permanently?");
             alert.showAndWait();
             if (alert.getResult() == ButtonType.OK) {
-                System.out.println("Attempting delete");
                 AddController.deletePerson(selectedPerson);
             }
         }
@@ -138,6 +152,7 @@ public class Controller implements Initializable, ICallback{
             int index = tableView.getSelectionModel().getFocusedIndex();
             selectedPerson = tableView.getItems().get(index);
             editMode = true;
+            AddController.editMode = true;
             openAddWindow(selectedPerson.getCardNumber());
         }
     }
@@ -159,7 +174,7 @@ public class Controller implements Initializable, ICallback{
             System.out.println(idText);
             selectedPerson = null;
             editMode = false;
-            for(Person p : rawDirectoryData){
+            for(Person p : Constants.rawDirectoryData){
                 if(p.getCardNumber().equals(idText)){
                     if(checkedInData.contains(p)){
                         signOut(p, wasForced);
@@ -182,6 +197,9 @@ public class Controller implements Initializable, ICallback{
         LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed out(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed out with " + "ID: " + p.getId());
     }
     private void signIn(Person p, boolean forced){
+        p.incrementTimesVisited();
+        directoryData.removeAll(p);
+        directoryData.add(p);
         checkedInData.add(p);
         p.setTimestampProperty(Constants.dateTimeFormatter.print(DateTime.now()));
         LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed in(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed in with " + "ID: " + p.getId());
@@ -229,7 +247,6 @@ public class Controller implements Initializable, ICallback{
     }
 
     private void refocusIdField(boolean runLater){
-        System.out.println("Attempt refocus");
         updateLogDisplay();
         if(runLater){
             Platform.runLater(()-> idField.requestFocus());
@@ -240,5 +257,41 @@ public class Controller implements Initializable, ICallback{
 
     private void updateLogDisplay(){
         logTextArea.setText(Constants.logContents);
+    }
+
+    //Used to convert gson files from version 1.1.x to 1.2.x.
+    @Deprecated
+    private void convertOldGsons(){
+        ArrayList<Person> directory = new ArrayList<>();
+        for(File f : Constants.directoryFiles){
+            if(!f.isHidden() && f.exists()){
+                try(BufferedReader br = new BufferedReader(new FileReader(f))){
+                    Gson gson = new Gson();
+                    //convert the json string back to object
+                    Person person = gson.fromJson(br, Person.class);
+                    Directory.validateUpToDateJson(person);
+                    Constants.directory.put(person.getCardNumber(), person);
+                    directory.add(person);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        Gson gson = FxGson.create();
+        //Save directory files in fxgson
+        for(Person person : directory) {
+            Path path = Paths.get(Constants.directoryFolder.toString(), person.getName().replace(" ", "_") + person.getId() + ".json");
+            FileManager.deleteFile(path);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toString()))) {
+                writer.write(gson.toJson(person));
+                writer.flush();
+                writer.close();
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+        }
+    }
+    private void exportToCSV() {
+        FileManager.getDirectoryAsCSV();
     }
 }

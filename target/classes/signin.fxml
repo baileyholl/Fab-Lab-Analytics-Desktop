@@ -12,6 +12,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem id="openFolderMenuButton" fx:id="openFolderMenuButton" mnemonicParsing="false" text="Open Folder" />
+                  <MenuItem fx:id="exportToCSV" mnemonicParsing="false" text="Export to CSV" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -20,11 +21,12 @@
                   <MenuItem fx:id="addMenuItem" mnemonicParsing="false" text="Add " />
                   <MenuItem fx:id="editMenuItem" mnemonicParsing="false" text="Edit" />
               <MenuItem fx:id="deleteMenuItem" mnemonicParsing="false" text="Delete" />
+                  <MenuItem fx:id="conversionButton" disable="true" mnemonicParsing="false" text="Conversion(Dont touch)" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="aboutButton" disable="true" mnemonicParsing="false" text="About" />
             </items>
           </Menu>
         </menus>

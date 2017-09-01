@@ -26,6 +26,9 @@ public final class LogManager {
     public static void readFileIntoContents() {
         try {
             Constants.logContents = new String(Files.readAllBytes(Paths.get(Constants.logFile.getPath())));
+            if(Constants.logContents == null){
+                Constants.logContents = "Log File Not Found ---- Data will not persist after closing";
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

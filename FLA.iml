@@ -14,8 +14,14 @@
     <orderEntry type="library" exported="" name="com.google.code.gson:gson:2.8.1" level="project" />
     <orderEntry type="library" exported="" name="joda-time:joda-time:2.9.9" level="project" />
     <orderEntry type="library" exported="" name="org.hildan.fxgson:fx-gson:3.1.0" level="project" />
+    <orderEntry type="library" name="org.apache.commons:commons-csv:1.4" level="project" />
+    <orderEntry type="library" name="commons-io:commons-io:2.5" level="project" />
+    <orderEntry type="library" name="commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.1" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.9.9" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.jetbrains:annotations:15.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-csv:1.4" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
+    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
   </component>
 </module>

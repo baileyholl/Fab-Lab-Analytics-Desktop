@@ -4,7 +4,18 @@ import com.google.gson.Gson;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import data.Constants;
 import data.Person;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Control;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hildan.fxgson.FxGson;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
+import javax.security.auth.login.LoginContext;
+import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -21,19 +32,28 @@ public final class FileManager {
 
     private static String OSDirectoryPath;
     private static String OSLogPath;
+    private static String OSAnalyticsPath;
+    private static Log log = LogFactory.getLog(FileManager.class);
 
     public static void setupFolders() {
         System.out.println("Searching for resource folder");
         Constants.mainFolder = new File(getFilePath());
         Constants.directoryFolder = new File(Constants.mainFolder.toString() + OSDirectoryPath);
         Constants.logFolder = new File(Constants.mainFolder.toString() + OSLogPath);
-        if (!(Constants.mainFolder.exists() && Constants.directoryFolder.exists() && Constants.logFolder.exists())) {
-            if (!(Constants.mainFolder.mkdir() && Constants.directoryFolder.mkdir() && Constants.logFolder.mkdir())) {
+        Constants.analyticsFolder = new File(Constants.mainFolder.toString() + OSAnalyticsPath);
+        if (!(Constants.mainFolder.exists() && Constants.directoryFolder.exists() && Constants.logFolder.exists() && Constants.analyticsFolder.exists())) {
+            if (!(Constants.mainFolder.mkdir() && Constants.directoryFolder.mkdir() && Constants.logFolder.mkdir() && Constants.analyticsFolder.mkdir())) {
                 System.out.println("FAILED MAKING PROPER DIRECTORIES.");
             }
             System.out.println("Created missing files.");
         }
-        List<File> list= Arrays.asList((FileManager.getAllFilesAtPath(Constants.directoryFolder)));
+        List<File> list;
+        if(Constants.directoryFolder.listFiles() == null) {
+            list = Arrays.asList(new File[0]);
+            log.debug("Array returned null. Setting contents of zero.");
+        }else{
+            list = Arrays.asList((Constants.directoryFolder.listFiles()));
+        }
         Constants.directoryFiles = new ArrayList<>();
         Constants.directoryFiles.addAll(list);
         setupLogger();
@@ -45,8 +65,12 @@ public final class FileManager {
         Constants.logFile = new File(path.toString());
         if(!Constants.logFile.exists()){
             try {
-                if(Constants.logFile.createNewFile())
+                if(Constants.logFile.createNewFile()) {
                     System.out.println("Created log file");
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Log file failed creating");
+                    alert.showAndWait();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -65,18 +89,21 @@ public final class FileManager {
             FileFolder = System.getenv("APPDATA") + "\\" + "FabLabAnalytics";
             OSDirectoryPath = ("\\directory");
             OSLogPath = ("\\log");
+            OSAnalyticsPath = "\\analytics";
             System.out.println("Found windows");
         }
         if (os.contains("MAC")) {
             FileFolder = System.getProperty("user.home") + "/Library/Application Support" + "/FabLabAnalytics";
             OSDirectoryPath = ("/directory");
             OSLogPath = ("/log");
+            OSAnalyticsPath = "/analytics";
             System.out.println("Found mac");
         }
         if (os.contains("NUX")) {
             FileFolder = System.getProperty("user.dir") + ".FabLabAnalytics";
             OSDirectoryPath = (".directory");
             OSLogPath = (".log");
+            OSAnalyticsPath = ".analytics";
             System.out.println("Found linux");
         }
         System.out.println(FileFolder);
@@ -84,25 +111,18 @@ public final class FileManager {
     }
 
     public static void saveDirectoryJsonFile(Person person) {
-        Gson gson = new Gson();
+        Gson gson = FxGson.create();
         Path path = Paths.get(Constants.directoryFolder.toString(), person.getName().replace(" ", "_")+person.getId()+".json");
         deleteFile(path);
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(path.toString()))){
-            writer.write(gson.toJson(person));
-            writer.flush();
-            writer.close();
-        }catch (Exception e){
-            System.out.println(e.toString());
+        try {
+            FileUtils.writeStringToFile(path.toFile(), gson.toJson(person), Charset.defaultCharset());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     public static File[] getAllFilesAtPath(File path){
-        File[] allFiles = path.listFiles();
-        if(allFiles == null){
-            allFiles = new File[0];
-            System.out.println("File array returned null. Returning array of no contents.");
-        }
-        return allFiles;
+        return path.listFiles();
     }
 
     public static boolean deleteFile(Path path){
@@ -113,21 +133,32 @@ public final class FileManager {
                 System.out.println("File does not exist");
                 System.out.println(path);
             }
-            return true;
-        } catch (IOException e) {
-            System.out.println(e.toString());
-            return false;
-        }
-    }
-
-    public static boolean deleteDirectoryFile(Person selectedPerson, String extension) {
-        Path path = Paths.get(Constants.directoryFolder.toString(), selectedPerson.getName().replace(" ", "_")+selectedPerson.getId()+ extension);
-        try{
-            if(path != null) Files.delete(path);
         } catch (IOException e) {
             System.out.println(e.toString());
             return false;
         }
         return true;
+    }
+
+    public static boolean deleteDirectoryFile(Person selectedPerson) {
+        Path path = Paths.get(Constants.directoryFolder.toString(), selectedPerson.getName().replace(" ", "_")+selectedPerson.getId()+ ".json");
+        return deleteFile(path);
+    }
+    public static void getDirectoryAsCSV(){
+        String CSVContents = "Card Input, ID, Name, Email, Certifications, Strikes, Notes, Visit Count" + "\n";
+        for(Person p : Constants.rawDirectoryData){
+            String row = p.getCardNumber() + "," + p.getId() + "," +p.getName() + "," + p.getEmail() + "," + p.getCertifications() + "," + p.getStrikes() + "," + p.getNotes() + "," + p.getTimesVisited() + "\n";
+            CSVContents += row;
+        }
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("MM-dd-yyyy");
+        Path path = Paths.get(Constants.analyticsFolder.toString(), "Directory" + dateTimeFormatter.print(DateTime.now()) + ".csv");
+        try {
+            FileUtils.writeStringToFile(path.toFile(), CSVContents, Charset.defaultCharset());
+            Desktop.getDesktop().open(Constants.analyticsFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Failed creating file." + e.getMessage());
+            alert.showAndWait();
+        }
     }
 }

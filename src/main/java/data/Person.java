@@ -3,6 +3,7 @@ package data;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.joda.time.DateTime;
+import util.FileManager;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -33,8 +34,9 @@ public class Person {
         this.strikes = new SimpleStringProperty(strikes);
     }
 
-    private void incrementTimesVisited(){
-        timesVisited.set(String.valueOf(Integer.valueOf(getTimesVisited()) + 1));
+    public void incrementTimesVisited(){
+        timesVisited = new SimpleStringProperty(String.valueOf(Integer.valueOf(getTimesVisited()) + 1));
+        FileManager.saveDirectoryJsonFile(this);
     }
 
     public String getName() {
