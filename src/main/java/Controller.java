@@ -1,5 +1,6 @@
 import data.Constants;
 import data.Person;
+import data.Timestamp;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -59,6 +60,14 @@ public class Controller implements Initializable, ICallback {
     @FXML
     TableColumn<Person, String> DVisitColumn;
     @FXML
+    TableColumn<Person, String> DlabCertColumn;
+    @FXML
+    TableColumn<Person, String> ClabCertColumn;
+    @FXML
+    TableColumn<Person, String> DshopCertColumn;
+    @FXML
+    TableColumn<Person, String> CshopCertColumn;
+    @FXML
     Button signInButton;
     @FXML
     TextField idField;
@@ -103,6 +112,10 @@ public class Controller implements Initializable, ICallback {
         DIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         DNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         DCertificationsColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
+        ClabCertColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
+        DlabCertColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
+        CshopCertColumn.setCellValueFactory(new PropertyValueFactory<>("shopCertification"));
+        DshopCertColumn.setCellValueFactory(new PropertyValueFactory<>("shopCertification"));
         DEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         DNotesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
         DStrikesColumn.setCellValueFactory(new PropertyValueFactory<>("strikes"));
@@ -188,6 +201,7 @@ public class Controller implements Initializable, ICallback {
     }
 
     private void signOut(Person p, boolean forced){
+        if(!p.getTimeStampHistory().isEmpty()) p.getTimeStampHistory().get(p.getTimeStampHistory().size() - 1);
         checkedInData.remove(p);
         LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed out(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed out with " + "ID: " + p.getId());
     }
@@ -196,7 +210,8 @@ public class Controller implements Initializable, ICallback {
         directoryData.removeAll(p);
         directoryData.add(p);
         checkedInData.add(p);
-        p.setTimestampProperty(Constants.dateTimeFormatter.print(DateTime.now()));
+        p.setTimestampProperty(Timestamp.getCurrentTime());
+        p.getTimeStampHistory().add("test");
         LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed in(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed in with " + "ID: " + p.getId());
     }
 
@@ -205,7 +220,7 @@ public class Controller implements Initializable, ICallback {
             idValue = input;
             AddController.root = FXMLLoader.load(getClass().getResource("entry.fxml"));
             AddController.stage.setTitle("Add New User");
-            AddController.stage.setScene(new Scene(AddController.root, 250  , 250));
+            AddController.stage.setScene(new Scene(AddController.root, 325  , 400));
             AddController.stage.setResizable(false);
             AddController.stage.show();
             AddController.iCallback = this;

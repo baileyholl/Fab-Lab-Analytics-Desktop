@@ -7,6 +7,7 @@ import util.FileManager;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -16,22 +17,27 @@ public class Person {
     private SimpleStringProperty id;
     private SimpleStringProperty name;
     private SimpleStringProperty email;
+    /*Lab Certification*/
     private SimpleStringProperty certifications;
+    private SimpleStringProperty shopCertification;
     private SimpleStringProperty notes;
     private transient SimpleStringProperty timestamp;
     private SimpleStringProperty timesVisited;
     private SimpleStringProperty strikes;
+    private ArrayList<String> timeStampHistory;
 
-    public Person(String cardNumber, String ID, String name, String email, String certifications, String notes, String strikes){
+    public Person(String cardNumber, String ID, String name, String email, String certifications, String shopCertification, String notes, String strikes){
         this.cardNumber = new SimpleStringProperty(cardNumber);
         this.id = new SimpleStringProperty(ID);
         this.name = new SimpleStringProperty(name);
         this.email = new SimpleStringProperty(email);
         this.certifications = new SimpleStringProperty(certifications);
+        this.shopCertification  = new SimpleStringProperty(shopCertification);
         this.notes = new SimpleStringProperty(notes);
         this.timestamp = new SimpleStringProperty(Constants.dateTimeFormatter.print(DateTime.now()));
         this.timesVisited = new SimpleStringProperty("0");
         this.strikes = new SimpleStringProperty(strikes);
+        this.timeStampHistory = new ArrayList<>();
     }
 
     public void incrementTimesVisited(){
@@ -124,5 +130,25 @@ public class Person {
 
     public SimpleStringProperty strikesProperty() {
         return strikes;
+    }
+
+    public String getShopCertification() {
+        return shopCertification.get();
+    }
+
+    public SimpleStringProperty shopCertificationProperty() {
+        return shopCertification;
+    }
+
+    public void setShopCertification(String shopCertification) {
+        this.shopCertification.set(shopCertification);
+    }
+
+    public ArrayList<String> getTimeStampHistory() {
+        return timeStampHistory;
+    }
+
+    public void setTimeStampHistory(ArrayList<String> timeStampHistory) {
+        this.timeStampHistory = timeStampHistory;
     }
 }

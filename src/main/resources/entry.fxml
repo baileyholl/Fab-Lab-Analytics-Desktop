@@ -5,23 +5,25 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="285.0" prefWidth="285.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="409.0" prefWidth="325.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddController">
    <children>
-      <Button fx:id="okButton" layoutX="146.0" layoutY="230.0" mnemonicParsing="false" text="OK" />
-      <Button fx:id="cancelButton" layoutX="47.0" layoutY="230.0" mnemonicParsing="false" text="Cancel" />
-      <Label layoutX="14.0" layoutY="71.0" text="Name" />
-      <TextField fx:id="idNumberField" layoutX="87.0" layoutY="40.0" />
-      <Label layoutX="14.0" layoutY="101.0" text="Email" />
-      <Label layoutX="14.0" layoutY="44.0" text="ID Number" />
-      <TextField fx:id="nameField" layoutX="87.0" layoutY="67.0" />
-      <TextField fx:id="emailField" layoutX="88.0" layoutY="97.0" />
-      <Label layoutX="14.0" layoutY="127.0" text="Certifications" />
-      <Label layoutX="14.0" layoutY="154.0" text="Notes" />
-      <TextField fx:id="certsField" layoutX="88.0" layoutY="123.0" />
-      <TextField fx:id="notesField" layoutX="87.0" layoutY="150.0" />
-      <Label layoutX="15.0" layoutY="15.0" text="Input" />
-      <TextField fx:id="inputField" layoutX="87.0" layoutY="11.0" />
-      <Label layoutX="14.0" layoutY="185.0" text="Strikes" />
-      <TextField fx:id="strikesField" layoutX="88.0" layoutY="181.0" />
+      <Button fx:id="okButton" layoutX="192.0" layoutY="355.0" mnemonicParsing="false" text="OK" />
+      <Button fx:id="cancelButton" layoutX="52.0" layoutY="355.0" mnemonicParsing="false" text="Cancel" />
+      <Label layoutX="20.0" layoutY="101.0" text="Name" />
+      <TextField fx:id="idNumberField" layoutX="133.0" layoutY="57.0" />
+      <Label layoutX="21.0" layoutY="139.0" text="Email" />
+      <Label layoutX="24.0" layoutY="61.0" text="ID Number" />
+      <TextField fx:id="nameField" layoutX="133.0" layoutY="97.0" />
+      <TextField fx:id="emailField" layoutX="133.0" layoutY="135.0" />
+      <Label layoutX="18.0" layoutY="183.0" text="Lab Certification" />
+      <Label layoutX="20.0" layoutY="267.0" text="Notes" />
+      <TextField fx:id="certsField" layoutX="133.0" layoutY="179.0" prefHeight="25.0" prefWidth="149.0" />
+      <TextField fx:id="notesField" layoutX="133.0" layoutY="263.0" prefHeight="25.0" prefWidth="149.0" />
+      <Label layoutX="25.0" layoutY="18.0" text="Input" />
+      <TextField fx:id="inputField" layoutX="133.0" layoutY="14.0" />
+      <Label layoutX="18.0" layoutY="310.0" text="Strikes" />
+      <TextField fx:id="strikesField" layoutX="133.0" layoutY="306.0" prefHeight="25.0" prefWidth="149.0" />
+      <Label layoutX="14.0" layoutY="225.0" text="Shop Certification" />
+      <TextField fx:id="shopField" layoutX="134.0" layoutY="221.0" prefHeight="25.0" prefWidth="149.0" />
    </children>
 </AnchorPane>

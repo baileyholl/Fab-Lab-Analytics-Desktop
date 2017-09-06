@@ -29,6 +29,8 @@ public class AddController implements Initializable {
     @FXML
     TextField certsField;
     @FXML
+    TextField shopField;
+    @FXML
     TextField notesField;
     @FXML
     TextField strikesField;
@@ -67,9 +69,9 @@ public class AddController implements Initializable {
     }
 
     private void addPersonToDirectory() {
-        if(!idNumberField.getText().isEmpty() && !nameField.getText().isEmpty()){
+        if(!idNumberField.getText().isEmpty() && !nameField.getText().isEmpty() && !inputField.getText().isEmpty()){
             Person person = new Person(inputField.getText(), idNumberField.getText(),nameField.getText(), emailField.getText(),
-                    certsField.getText(), notesField.getText(), strikesField.getText());
+                    certsField.getText(), shopField.getText(), notesField.getText(), strikesField.getText());
             if(Controller.editMode && Controller.selectedPerson != null){
                 deletePerson(Controller.selectedPerson);
             }
@@ -84,7 +86,7 @@ public class AddController implements Initializable {
             close();
             if(iCallback != null) iCallback.Callback();
         }else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Must have an ID and Name.");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Must have an ID, Input Value, and Name. If user cannot swipe, input their Drivers License as the Input.");
             alert.showAndWait();
         }
     }

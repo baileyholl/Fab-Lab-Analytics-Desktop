@@ -28,7 +28,6 @@ public class Directory {
             if(!f.isHidden() && f.exists()){
                 try(BufferedReader br = new BufferedReader(new FileReader(f))){
                     Gson gson = FxGson.create();
-                    //convert the json string back to object
                     Person person = gson.fromJson(br, Person.class);
                     validateUpToDateJson(person);
                     directory.put(person.getCardNumber(), person);
@@ -45,10 +44,14 @@ public class Directory {
      */
     public static void validateUpToDateJson(Person person){
         if(person != null) {
-            if ((person.strikesProperty() == null || person.getStrikes() == null))
+            if ((person.strikesProperty() == null || person.getStrikes() == null)) {
                 person.setStrikesProperty("0");
+            }
             if(person.timesVisitedProperty() == null || person.getTimesVisited() == null){
                 person.setTimesVisitedProperty("0");
+            }
+            if(person.getTimeStampHistory() == null){
+                person.setTimeStampHistory(new ArrayList<>());
             }
         }
     }

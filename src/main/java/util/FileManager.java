@@ -113,6 +113,9 @@ public final class FileManager {
         Path path = Paths.get(Constants.directoryFolder.toString(), person.getName().replace(" ", "_")+person.getId()+".json");
         deleteFile(path);
         try {
+            if(person.getTimeStampHistory() == null){
+                person.setTimeStampHistory(new ArrayList<>());
+            }
             FileUtils.writeStringToFile(path.toFile(), gson.toJson(person), Charset.defaultCharset());
         } catch (IOException e) {
             e.printStackTrace();

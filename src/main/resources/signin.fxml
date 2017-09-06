@@ -42,8 +42,12 @@
                             <TableColumn fx:id="CIDColumn" prefWidth="126.0" text="ID" />
                             <TableColumn fx:id="CNameColumn" prefWidth="195.0" text="Name" />
                               <TableColumn fx:id="CTimestampColumn" prefWidth="141.0" text="Timestamp" />
-                              <TableColumn fx:id="CCertificationsColumn" prefWidth="266.0" text="Certifications" />
-                              <TableColumn fx:id="CStrikesColumn" prefWidth="120.6666259765625" text="Strikes" />
+                              <TableColumn fx:id="CCertificationsColumn" prefWidth="219.0" text="Certifications">
+                                 <columns>
+                                    <TableColumn fx:id="CshopCertColumn" prefWidth="75.0" text="Shop" />
+                                    <TableColumn fx:id="ClabCertColumn" prefWidth="97.0" text="Lab" />
+                                 </columns></TableColumn>
+                              <TableColumn fx:id="CStrikesColumn" prefWidth="182.0" text="Strikes" />
                               <TableColumn fx:id="CNotesColumn" minWidth="0.0" prefWidth="336.0" text="Notes" />
                               <TableColumn fx:id="CVisitColumn" prefWidth="75.0" text="Visit Count" />
                           </columns>
@@ -64,7 +68,11 @@
                               <TableColumn fx:id="DIDColumn" prefWidth="91.0" text="ID" />
                               <TableColumn fx:id="DNameColumn" prefWidth="168.0" text="Name" />
                               <TableColumn fx:id="DEmailColumn" prefWidth="144.0" text="Email" />
-                              <TableColumn fx:id="DCertificationsColumn" prefWidth="232.66668701171875" text="Certifications" />
+                              <TableColumn fx:id="DCertificationsColumn" prefWidth="232.66668701171875" text="Certifications">
+                                 <columns>
+                                    <TableColumn fx:id="DlabCertColumn" prefWidth="97.0" text="Lab" />
+                                    <TableColumn fx:id="DshopCertColumn" prefWidth="75.0" text="Shop" />
+                                 </columns></TableColumn>
                               <TableColumn fx:id="DStrikesColumn" prefWidth="120.6666259765625" text="Strikes" />
                               <TableColumn fx:id="DNotesColumn" minWidth="0.0" prefWidth="225.3333740234375" text="Notes" />
                               <TableColumn fx:id="DVisitColumn" prefWidth="75.0" text="Visit Count" />
