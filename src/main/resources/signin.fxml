@@ -73,9 +73,9 @@
                                     <TableColumn fx:id="DlabCertColumn" prefWidth="97.0" text="Lab" />
                                     <TableColumn fx:id="DshopCertColumn" prefWidth="75.0" text="Shop" />
                                  </columns></TableColumn>
-                              <TableColumn fx:id="DStrikesColumn" prefWidth="120.6666259765625" text="Strikes" />
+                              <TableColumn fx:id="DStrikesColumn" prefWidth="75.0" text="Strikes" />
                               <TableColumn fx:id="DNotesColumn" minWidth="0.0" prefWidth="225.3333740234375" text="Notes" />
-                              <TableColumn fx:id="DVisitColumn" prefWidth="75.0" text="Visit Count" />
+                              <TableColumn fx:id="DVisitColumn" prefWidth="50.0" text="Visit Count" />
                            </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
