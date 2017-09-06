@@ -7,8 +7,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.apache.commons.io.FileUtils;
 import util.FileManager;
+import util.ICallback;
 import util.LogManager;
 
 import java.net.URL;
@@ -36,6 +36,7 @@ public class AddController implements Initializable {
     Button okButton;
     @FXML
     Button cancelButton;
+
     private static String oldInput;
     public static boolean editMode;
     @Override

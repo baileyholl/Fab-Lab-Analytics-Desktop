@@ -1,6 +1,4 @@
-import com.google.gson.Gson;
 import data.Constants;
-import data.Directory;
 import data.Person;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -15,20 +13,17 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.hildan.fxgson.FxGson;
 import org.joda.time.DateTime;
 import util.FileManager;
+import util.ICallback;
 import util.LogManager;
 import util.WebUtil;
 
-import java.awt.*;
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
-public class Controller implements Initializable, ICallback{
+public class Controller implements Initializable, ICallback {
     public static ObservableList<Person> checkedInData = FXCollections.observableArrayList();
     public static ObservableList<Person> directoryData = FXCollections.observableArrayList();
     @FXML
@@ -116,7 +111,7 @@ public class Controller implements Initializable, ICallback{
         directoryData.setAll(Constants.rawDirectoryData);
         signInButton.setOnAction(event -> handleSwipe(false));
         idField.setOnAction(event -> handleSwipe(false));
-        openFolderMenuButton.setOnAction(event -> openFolderExplorer());
+        openFolderMenuButton.setOnAction(event -> FileManager.openFolderExplorer());
         addMenuItem.setOnAction(event -> openAddWindow(""));
         editMenuItem.setOnAction(event-> editSelected());
         deleteMenuItem.setOnAction(event -> deleteSelected());
@@ -124,9 +119,9 @@ public class Controller implements Initializable, ICallback{
         directoryTab.setOnSelectionChanged(event -> refocusIdField(true));
         checkedInTab.setOnSelectionChanged(event -> refocusIdField(true));
         logTab.setOnSelectionChanged(event -> refocusIdField(true));
-        exportToCSV.setOnAction(event ->  exportToCSV());
+        exportToCSV.setOnAction(event ->  FileManager.getDirectoryAsCSV());
         aboutButton.setOnAction(event -> WebUtil.openWebpage(Constants.aboutLink));
-        conversionButton.setOnAction(event -> convertOldGsons());
+        conversionButton.setOnAction(event -> FileManager.convertOldGsons());
         CheckinTable.setItems(checkedInData);
         DirectoryTable.setItems(directoryData);
         logTextArea.setText(Constants.logContents);
@@ -218,13 +213,6 @@ public class Controller implements Initializable, ICallback{
             e.printStackTrace();
         }
     }
-    private void openFolderExplorer() {
-        try {
-            Desktop.getDesktop().open(Constants.mainFolder);
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-    }
 
     private void forceSignInOut() {
         TableView<Person> tableView = getFocusedTableView();
@@ -262,39 +250,4 @@ public class Controller implements Initializable, ICallback{
         logTextArea.setText(Constants.logContents);
     }
 
-    //Used to convert gson files from version 1.1.x to 1.2.x.
-    @Deprecated
-    private void convertOldGsons(){
-        ArrayList<Person> directory = new ArrayList<>();
-        for(File f : Constants.directoryFiles){
-            if(!f.isHidden() && f.exists()){
-                try(BufferedReader br = new BufferedReader(new FileReader(f))){
-                    Gson gson = new Gson();
-                    //convert the json string back to object
-                    Person person = gson.fromJson(br, Person.class);
-                    Directory.validateUpToDateJson(person);
-                    Constants.directory.put(person.getCardNumber(), person);
-                    directory.add(person);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-        Gson gson = FxGson.create();
-        //Save directory files in fxgson
-        for(Person person : directory) {
-            Path path = Paths.get(Constants.directoryFolder.toString(), person.getName().replace(" ", "_") + person.getId() + ".json");
-            FileManager.deleteFile(path);
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toString()))) {
-                writer.write(gson.toJson(person));
-                writer.flush();
-                writer.close();
-            } catch (Exception e) {
-                System.out.println(e.toString());
-            }
-        }
-    }
-    private void exportToCSV() {
-        FileManager.getDirectoryAsCSV();
-    }
 }

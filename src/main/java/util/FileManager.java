@@ -3,6 +3,7 @@ package util;
 import com.google.gson.Gson;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import data.Constants;
+import data.Directory;
 import data.Person;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
@@ -16,10 +17,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import javax.security.auth.login.LoginContext;
 import java.awt.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -121,10 +119,6 @@ public final class FileManager {
         }
     }
 
-    public static File[] getAllFilesAtPath(File path){
-        return path.listFiles();
-    }
-
     public static boolean deleteFile(Path path){
         try{
             if(path != null && path.toFile().exists()){
@@ -144,6 +138,14 @@ public final class FileManager {
         Path path = Paths.get(Constants.directoryFolder.toString(), selectedPerson.getName().replace(" ", "_")+selectedPerson.getId()+ ".json");
         return deleteFile(path);
     }
+    public static void openFolderExplorer() {
+        try {
+            Desktop.getDesktop().open(Constants.mainFolder);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
     public static void getDirectoryAsCSV(){
         String CSVContents = "Card Input, ID, Name, Email, Certifications, Strikes, Notes, Visit Count" + "\n";
         for(Person p : Constants.rawDirectoryData){
@@ -159,6 +161,39 @@ public final class FileManager {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR, "Failed creating file." + e.getMessage());
             alert.showAndWait();
+        }
+    }
+
+    //Used to convert gson files from version 1.1.x to 1.2.x.
+    @Deprecated
+    public static void convertOldGsons(){
+        ArrayList<Person> directory = new ArrayList<>();
+        for(File f : Constants.directoryFiles){
+            if(!f.isHidden() && f.exists()){
+                try(BufferedReader br = new BufferedReader(new FileReader(f))){
+                    Gson gson = new Gson();
+                    //convert the json string back to object
+                    Person person = gson.fromJson(br, Person.class);
+                    Directory.validateUpToDateJson(person);
+                    Constants.directory.put(person.getCardNumber(), person);
+                    directory.add(person);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        Gson gson = FxGson.create();
+        //Save directory files in fxgson
+        for(Person person : directory) {
+            Path path = Paths.get(Constants.directoryFolder.toString(), person.getName().replace(" ", "_") + person.getId() + ".json");
+            FileManager.deleteFile(path);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toString()))) {
+                writer.write(gson.toJson(person));
+                writer.flush();
+                writer.close();
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
         }
     }
 }
