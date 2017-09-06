@@ -16,7 +16,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         setupFiles();
         Parent root = FXMLLoader.load(getClass().getResource("/signin.fxml"));
-
         primaryStage.setTitle("Fab Lab Analytics");
         primaryStage.setScene(new Scene(root, 1060  , 650));
         setUserAgentStylesheet(STYLESHEET_CASPIAN);

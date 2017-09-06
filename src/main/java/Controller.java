@@ -239,6 +239,9 @@ public class Controller implements Initializable, ICallback{
     public void Callback() {
         if(editMode && selectedPerson != null){
             LogManager.appendLogWithTimeStamp(selectedPerson.getName() + " with ID: " + selectedPerson.getId() + " was edited.");
+            if(AddController.editMode){
+                AddController.editMode = false;
+            }
         }
         selectedPerson = null;
         editMode = false;

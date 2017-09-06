@@ -26,7 +26,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem fx:id="aboutButton" disable="true" mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="aboutButton" mnemonicParsing="false" text="About" />
             </items>
           </Menu>
         </menus>

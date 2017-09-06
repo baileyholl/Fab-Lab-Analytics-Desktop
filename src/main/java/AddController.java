@@ -59,6 +59,7 @@ public class AddController implements Initializable {
         idNumberField.setOnAction(event -> addPersonToDirectory());
         nameField.setOnAction(event -> addPersonToDirectory());
         certsField.setOnAction(event -> addPersonToDirectory());
+        strikesField.setOnAction(event -> addPersonToDirectory());
         okButton.setOnAction(event -> addPersonToDirectory());
         cancelButton.setOnAction(event -> close());
 
@@ -73,8 +74,8 @@ public class AddController implements Initializable {
             }
             Constants.rawDirectoryData.add(person);
             Controller.directoryData.add(person);
+            Controller.checkedInData.add(person);
             if(!editMode) {
-                Controller.checkedInData.add(person);
                 LogManager.appendLogWithTimeStamp(person.getName() + " was added to the directory and signed in with ID: " + person.getId());
                 person.incrementTimesVisited();
             }
@@ -91,9 +92,9 @@ public class AddController implements Initializable {
         Constants.rawDirectoryData.remove(person);
         Controller.directoryData.remove(person);
         FileManager.deleteDirectoryFile(person);
+        Controller.checkedInData.remove(person);
         if(!editMode){
             LogManager.appendLogWithTimeStamp(person.getName() + " with ID: " + person.getId() + " was deleted from the directory.");
-            Controller.checkedInData.remove(person);
         }
     }
 
