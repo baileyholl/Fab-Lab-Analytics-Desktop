@@ -1,6 +1,7 @@
 package util;
 
 import data.Constants;
+import data.Timestamp;
 import org.joda.time.DateTime;
 
 import java.io.FileNotFoundException;
@@ -18,7 +19,7 @@ public final class LogManager {
     }
 
     public static void appendLogWithTimeStamp(String string){
-        String timeStamp = Constants.dateTimeFormatter.print(DateTime.now());
+        String timeStamp = Timestamp.getCurrentTime();
         Constants.logContents += "[" + timeStamp + "] " + string + '\n';
         writeFile();
     }

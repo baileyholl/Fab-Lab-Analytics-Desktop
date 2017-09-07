@@ -211,7 +211,7 @@ public class Controller implements Initializable, ICallback {
         directoryData.add(p);
         checkedInData.add(p);
         p.setTimestampProperty(Timestamp.getCurrentTime());
-        p.getTimeStampHistory().add("test");
+        p.getTimeStampHistory().add(Timestamp.Now());
         LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed in(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed in with " + "ID: " + p.getId());
     }
 

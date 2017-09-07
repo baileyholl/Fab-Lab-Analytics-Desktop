@@ -23,7 +23,7 @@ public class Directory {
         System.out.println("Put: " + directory.size() + " elements into directory");
     }
 
-    public void loadJsonsIntoDirectory(ArrayList<File> directoryFiles){
+    private void loadJsonsIntoDirectory(ArrayList<File> directoryFiles){
         for(File f : directoryFiles){
             if(!f.isHidden() && f.exists()){
                 try(BufferedReader br = new BufferedReader(new FileReader(f))){
@@ -52,6 +52,9 @@ public class Directory {
             }
             if(person.getTimeStampHistory() == null){
                 person.setTimeStampHistory(new ArrayList<>());
+            }
+            if(person.shopCertificationProperty() == null || person.getShopCertification() == null){
+                person.setShopCertification("");
             }
         }
     }

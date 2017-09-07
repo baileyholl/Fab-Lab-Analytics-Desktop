@@ -24,7 +24,7 @@ public class Person {
     private transient SimpleStringProperty timestamp;
     private SimpleStringProperty timesVisited;
     private SimpleStringProperty strikes;
-    private ArrayList<String> timeStampHistory;
+    private ArrayList<Timestamp> timeStampHistory;
 
     public Person(String cardNumber, String ID, String name, String email, String certifications, String shopCertification, String notes, String strikes){
         this.cardNumber = new SimpleStringProperty(cardNumber);
@@ -141,14 +141,22 @@ public class Person {
     }
 
     public void setShopCertification(String shopCertification) {
+        if(this.shopCertification == null){
+            this.shopCertification = new SimpleStringProperty();
+        }
         this.shopCertification.set(shopCertification);
     }
 
-    public ArrayList<String> getTimeStampHistory() {
+    public ArrayList<Timestamp> getTimeStampHistory() {
         return timeStampHistory;
     }
 
-    public void setTimeStampHistory(ArrayList<String> timeStampHistory) {
+    public void setTimeStampHistory(ArrayList<Timestamp> timeStampHistory) {
         this.timeStampHistory = timeStampHistory;
+    }
+
+    @Override
+    public String toString() {
+        return getId() + getStrikes() + getTimesVisited() + getName() + getCardNumber() + getCertifications() + getEmail() + getShopCertification() + getTimeStampHistory();
     }
 }

@@ -116,8 +116,10 @@ public final class FileManager {
             if(person.getTimeStampHistory() == null){
                 person.setTimeStampHistory(new ArrayList<>());
             }
+            System.out.println(person.toString());
             FileUtils.writeStringToFile(path.toFile(), gson.toJson(person), Charset.defaultCharset());
-        } catch (IOException e) {
+        } catch (Exception e) {
+            System.out.println(person.toString());
             e.printStackTrace();
         }
     }

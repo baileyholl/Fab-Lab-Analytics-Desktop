@@ -74,11 +74,12 @@ public class AddController implements Initializable {
                     certsField.getText(), shopField.getText(), notesField.getText(), strikesField.getText());
             if(Controller.editMode && Controller.selectedPerson != null){
                 deletePerson(Controller.selectedPerson);
+                Controller.checkedInData.add(person);
             }
             Constants.rawDirectoryData.add(person);
             Controller.directoryData.add(person);
-            Controller.checkedInData.add(person);
             if(!editMode) {
+                Controller.checkedInData.add(person);
                 LogManager.appendLogWithTimeStamp(person.getName() + " was added to the directory and signed in with ID: " + person.getId());
                 person.incrementTimesVisited();
             }
