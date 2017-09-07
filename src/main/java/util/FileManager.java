@@ -169,6 +169,27 @@ public final class FileManager {
         }
     }
 
+    /**
+     * Used to bring older versions of the json database up to date.
+     * @param person Person object to be validated
+     */
+    public static void validateUpToDateJson(Person person){
+        if(person != null) {
+            if ((person.strikesProperty() == null || person.getStrikes() == null)) {
+                person.setStrikesProperty("0");
+            }
+            if(person.timesVisitedProperty() == null || person.getTimesVisited() == null){
+                person.setTimesVisitedProperty("0");
+            }
+            if(person.getTimeStampHistory() == null){
+                person.setTimeStampHistory(new ArrayList<>());
+            }
+            if(person.shopCertificationProperty() == null || person.getShopCertification() == null){
+                person.setShopCertification("");
+            }
+        }
+    }
+
     //Used to convert gson files from version 1.1.x to 1.2.x.
     @Deprecated
     public static void convertOldGsons(){
@@ -201,4 +222,5 @@ public final class FileManager {
             }
         }
     }
+
 }

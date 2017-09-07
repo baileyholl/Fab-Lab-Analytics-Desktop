@@ -44,8 +44,8 @@
                               <TableColumn fx:id="CTimestampColumn" prefWidth="141.0" text="Timestamp" />
                               <TableColumn fx:id="CCertificationsColumn" prefWidth="219.0" text="Certifications">
                                  <columns>
-                                    <TableColumn fx:id="CshopCertColumn" prefWidth="75.0" text="Shop" />
                                     <TableColumn fx:id="ClabCertColumn" prefWidth="97.0" text="Lab" />
+                                    <TableColumn fx:id="CshopCertColumn" prefWidth="75.0" text="Shop" />
                                  </columns></TableColumn>
                               <TableColumn fx:id="CStrikesColumn" prefWidth="182.0" text="Strikes" />
                               <TableColumn fx:id="CNotesColumn" minWidth="0.0" prefWidth="336.0" text="Notes" />

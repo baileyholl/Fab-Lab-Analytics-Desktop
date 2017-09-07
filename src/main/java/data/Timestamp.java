@@ -1,11 +1,14 @@
 package data;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class Timestamp {
 
     private String start;
     private String end;
+    private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("MM-dd-yyyy hh:mm a");
 
     public Timestamp(String start, String end){
         this.start = start;
@@ -26,7 +29,7 @@ public class Timestamp {
     }
 
     public static String getCurrentTime(){
-        return Constants.dateTimeFormatter.print(DateTime.now());
+        return dateTimeFormatter.print(DateTime.now());
     }
 
     public String getStart() {

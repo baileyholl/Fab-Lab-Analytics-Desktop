@@ -1,5 +1,6 @@
 import data.Constants;
 import data.Directory;
+import data.PersonModel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -12,15 +13,30 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import util.FileManager;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         setupFiles();
-        Parent root = FXMLLoader.load(getClass().getResource("/signin.fxml"));
+        PersonModel directoryModel = new PersonModel();
+        PersonModel checkinModel = new PersonModel();
+        directoryModel.loadFromFiles(Constants.directoryFiles);
+
+        //Set up resources and model structure
+        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/signin.fxml"));
+        Parent root = mainLoader.load();
+        Controller mainController = mainLoader.getController();
+        mainController.initModel(checkinModel, directoryModel);
+
+        FXMLLoader addLoader = new FXMLLoader(getClass().getResource("/entry.fxml"));
+        Parent addRoot = addLoader.load();
+        //.load() MUST be called before getting the controller.
+        AddController addController = addLoader.getController();
+        addController.setRoot(addRoot);
+        addController.setupStage();
+        mainController.initControllers(addController);
+
+
+        //Parent root = FXMLLoader.load(getClass().getResource("/signin.fxml"));
         primaryStage.setTitle("Fab Lab Analytics");
         primaryStage.setScene(new Scene(root, 1060  , 650));
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

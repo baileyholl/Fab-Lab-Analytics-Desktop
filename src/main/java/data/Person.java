@@ -34,7 +34,7 @@ public class Person {
         this.certifications = new SimpleStringProperty(certifications);
         this.shopCertification  = new SimpleStringProperty(shopCertification);
         this.notes = new SimpleStringProperty(notes);
-        this.timestamp = new SimpleStringProperty(Constants.dateTimeFormatter.print(DateTime.now()));
+        this.timestamp = new SimpleStringProperty(Timestamp.getCurrentTime());
         this.timesVisited = new SimpleStringProperty("0");
         this.strikes = new SimpleStringProperty(strikes);
         this.timeStampHistory = new ArrayList<>();

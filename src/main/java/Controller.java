@@ -1,5 +1,6 @@
 import data.Constants;
 import data.Person;
+import data.PersonModel;
 import data.Timestamp;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -27,6 +28,7 @@ import java.util.*;
 public class Controller implements Initializable, ICallback {
     public static ObservableList<Person> checkedInData = FXCollections.observableArrayList();
     public static ObservableList<Person> directoryData = FXCollections.observableArrayList();
+
     @FXML
     TableView<Person> CheckinTable;
     @FXML
@@ -96,9 +98,21 @@ public class Controller implements Initializable, ICallback {
     @FXML
     TextArea logTextArea;
 
-    static String idValue;
-    static Person selectedPerson;
-    static boolean editMode;
+    private Person selectedPerson;
+
+    private PersonModel checkInModel;
+    private PersonModel directoryModel;
+    private AddController addController;
+
+    public void initModel(PersonModel checkInModel, PersonModel directoryModel){
+        this.checkInModel = checkInModel;
+        this.directoryModel = directoryModel;
+    }
+
+    public void initControllers(AddController controller){
+        this.addController = controller;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Constants.rawDirectoryData = new ArrayList<>();
@@ -149,7 +163,7 @@ public class Controller implements Initializable, ICallback {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + selectedPerson.getName() + " from directory and check in permanently?");
             alert.showAndWait();
             if (alert.getResult() == ButtonType.OK) {
-                AddController.deletePerson(selectedPerson);
+                addController.deletePerson(selectedPerson);
             }
         }
     }
@@ -159,8 +173,7 @@ public class Controller implements Initializable, ICallback {
         if(tableView != null){
             int index = tableView.getSelectionModel().getFocusedIndex();
             selectedPerson = tableView.getItems().get(index);
-            editMode = true;
-            AddController.editMode = true;
+            addController.editMode = true;
             openAddWindow(selectedPerson.getCardNumber());
         }
     }
@@ -181,7 +194,7 @@ public class Controller implements Initializable, ICallback {
         if(!idText.isEmpty()) {
             System.out.println(idText);
             selectedPerson = null;
-            editMode = false;
+            addController.editMode = false;
             for(Person p : Constants.rawDirectoryData){
                 if(p.getCardNumber().equals(idText)){
                     if(checkedInData.contains(p)){
@@ -216,17 +229,16 @@ public class Controller implements Initializable, ICallback {
     }
 
     private void openAddWindow(String input){
-        try {
-            idValue = input;
-            AddController.root = FXMLLoader.load(getClass().getResource("entry.fxml"));
-            AddController.stage.setTitle("Add New User");
-            AddController.stage.setScene(new Scene(AddController.root, 325  , 400));
-            AddController.stage.setResizable(false);
-            AddController.stage.show();
-            AddController.iCallback = this;
-        } catch (IOException e) {
-            e.printStackTrace();
+        addController.open(this, input, getSelectedPerson());
+    }
+
+    private Person getSelectedPerson(){
+        TableView<Person> tableView = getFocusedTableView();
+        Person person = null;
+        if(tableView != null) {
+            person = tableView.getItems().get(tableView.getSelectionModel().getFocusedIndex());
         }
+        return person;
     }
 
     private void forceSignInOut() {
@@ -240,14 +252,13 @@ public class Controller implements Initializable, ICallback {
 
     @Override
     public void Callback() {
-        if(editMode && selectedPerson != null){
+        if(addController.editMode && selectedPerson != null){
             LogManager.appendLogWithTimeStamp(selectedPerson.getName() + " with ID: " + selectedPerson.getId() + " was edited.");
-            if(AddController.editMode){
-                AddController.editMode = false;
+            if(addController.editMode){
+                addController.editMode = false;
             }
         }
         selectedPerson = null;
-        editMode = false;
         idField.setText("");
         refocusIdField(false);
     }

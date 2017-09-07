@@ -18,8 +18,7 @@ public class Constants {
     public static File logFile;
     public static Directory directory;
     public static String logContents;
-    public static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("MM-dd-yyyy hh:mm a");
-
+    
     public static ArrayList<Person> rawDirectoryData;
 
     public final static String aboutLink = "https://github.com/baileyholl/Fab-Lab-Analytics-Desktop";

@@ -3,6 +3,7 @@ import data.Person;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -15,9 +16,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AddController implements Initializable {
-    static Stage stage = new Stage();
-    static Parent root;
-    static ICallback iCallback;
     @FXML
     TextField inputField;
     @FXML
@@ -39,23 +37,14 @@ public class AddController implements Initializable {
     @FXML
     Button cancelButton;
 
-    private static String oldInput;
-    public static boolean editMode;
+    private Stage stage;
+    private Parent root;
+    private ICallback iCallback;
+    public boolean editMode;
+    public String idValue;
+    private Person selectedPerson;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        inputField.setText(Controller.idValue);
-        strikesField.setText("0");
-        if(Controller.selectedPerson != null){
-            Person p = Controller.selectedPerson;
-            inputField.setText(p.getCardNumber());
-            oldInput = p.getCardNumber();
-            nameField.setText(p.getName());
-            idNumberField.setText(p.getId());
-            certsField.setText(p.getCertifications());
-            notesField.setText(p.getNotes());
-            emailField.setText(p.getEmail());
-            strikesField.setText(p.getStrikes());
-        }
         notesField.setOnAction(event -> addPersonToDirectory());
         inputField.setOnAction(event -> addPersonToDirectory());
         emailField.setOnAction(event -> addPersonToDirectory());
@@ -65,15 +54,14 @@ public class AddController implements Initializable {
         strikesField.setOnAction(event -> addPersonToDirectory());
         okButton.setOnAction(event -> addPersonToDirectory());
         cancelButton.setOnAction(event -> close());
-
     }
 
     private void addPersonToDirectory() {
         if(!idNumberField.getText().isEmpty() && !nameField.getText().isEmpty() && !inputField.getText().isEmpty()){
             Person person = new Person(inputField.getText(), idNumberField.getText(),nameField.getText(), emailField.getText(),
                     certsField.getText(), shopField.getText(), notesField.getText(), strikesField.getText());
-            if(Controller.editMode && Controller.selectedPerson != null){
-                deletePerson(Controller.selectedPerson);
+            if(editMode && selectedPerson != null){
+                deletePerson(selectedPerson);
                 Controller.checkedInData.add(person);
             }
             Constants.rawDirectoryData.add(person);
@@ -92,7 +80,7 @@ public class AddController implements Initializable {
         }
     }
 
-    public static void deletePerson(Person person){
+    public  void deletePerson(Person person){
         Constants.rawDirectoryData.remove(person);
         Controller.directoryData.remove(person);
         FileManager.deleteDirectoryFile(person);
@@ -100,6 +88,25 @@ public class AddController implements Initializable {
         if(!editMode){
             LogManager.appendLogWithTimeStamp(person.getName() + " with ID: " + person.getId() + " was deleted from the directory.");
         }
+    }
+
+    public void open(ICallback iCallback, String idValue, Person selectedPerson){
+        this.idValue = idValue;
+        this.iCallback = iCallback;
+        this.selectedPerson = selectedPerson;
+        inputField.setText(idValue);
+        strikesField.setText("0");
+        if(selectedPerson != null){
+
+            inputField.setText(selectedPerson.getCardNumber());
+            nameField.setText(selectedPerson.getName());
+            idNumberField.setText(selectedPerson.getId());
+            certsField.setText(selectedPerson.getCertifications());
+            notesField.setText(selectedPerson.getNotes());
+            emailField.setText(selectedPerson.getEmail());
+            strikesField.setText(selectedPerson.getStrikes());
+        }
+        stage.show();
     }
 
     private void close(){
@@ -110,7 +117,19 @@ public class AddController implements Initializable {
         notesField.clear();
         strikesField.clear();
         stage.close();
+        selectedPerson = null;
         editMode = false;
         if(iCallback != null) iCallback.Callback();
+    }
+    public void setupStage(){
+        stage = new Stage();
+        stage.setTitle("Add New User");
+        stage.setScene(new Scene(root,325  , 400));
+        stage.setResizable(false);
+        stage.setOnCloseRequest(event -> close());
+    }
+
+    public void setRoot(Parent root){
+        this.root = root;
     }
 }

@@ -4,7 +4,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 /**
- *
+ * Stores a set of person objects in a map stored by key value of the card input. Used to
+ * manage seperate sets in directory and current checked in list in the UI.
  */
 public class PersonMap {
     /*Stores a map of people where the key is the Card Number and the value is the person object.*/
@@ -32,7 +33,9 @@ public class PersonMap {
     public boolean containsKey(String string){
         return this.personLinkedHashMap.containsKey(string);
     }
-
+    public Person get(String key){
+        return this.personLinkedHashMap.get(key);
+    }
     public Person put(Person person){
         return this.personLinkedHashMap.put(person.getCardNumber(), person);
     }
