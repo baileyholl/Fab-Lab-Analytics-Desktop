@@ -6,6 +6,7 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 /out
+/target
 # Package Files #
 *.war
 *.ear

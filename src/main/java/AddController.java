@@ -1,3 +1,4 @@
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import data.Constants;
 import data.Person;
 import javafx.fxml.FXML;
@@ -61,12 +62,14 @@ public class AddController implements Initializable {
             Person person = new Person(inputField.getText(), idNumberField.getText(),nameField.getText(), emailField.getText(),
                     certsField.getText(), shopField.getText(), notesField.getText(), strikesField.getText());
             if(editMode && selectedPerson != null){
+                if(Controller.checkedInData.contains(selectedPerson)){
+                    Controller.checkedInData.add(person);
+                }
                 deletePerson(selectedPerson);
-                Controller.checkedInData.add(person);
+                Constants.rawDirectoryData.add(person);
+                Controller.directoryData.add(person);
             }
-            Constants.rawDirectoryData.add(person);
-            Controller.directoryData.add(person);
-            if(!editMode) {
+            else if(!editMode) {
                 Controller.checkedInData.add(person);
                 LogManager.appendLogWithTimeStamp(person.getName() + " was added to the directory and signed in with ID: " + person.getId());
                 person.incrementTimesVisited();
