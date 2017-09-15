@@ -1,4 +1,3 @@
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import data.Constants;
 import data.Person;
 import javafx.fxml.FXML;
@@ -44,6 +43,13 @@ public class AddController implements Initializable {
     public boolean editMode;
     public String idValue;
     private Person selectedPerson;
+    private Controller parentController;
+
+    public void initParentController(Controller controller){
+        if(parentController != null) throw new IllegalStateException("Parent Controller already initialized.");
+        this.parentController = controller;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         notesField.setOnAction(event -> addPersonToDirectory());
@@ -62,15 +68,20 @@ public class AddController implements Initializable {
             Person person = new Person(inputField.getText(), idNumberField.getText(),nameField.getText(), emailField.getText(),
                     certsField.getText(), shopField.getText(), notesField.getText(), strikesField.getText());
             if(editMode && selectedPerson != null){
-                if(Controller.checkedInData.contains(selectedPerson)){
-                    Controller.checkedInData.add(person);
+                if(parentController.checkInModel.contains(selectedPerson)){
+                    parentController.checkInModel.get(selectedPerson.getCardNumber()).set(person);
                 }
-                deletePerson(selectedPerson);
-                Constants.rawDirectoryData.add(person);
-                Controller.directoryData.add(person);
+                //if(Controller.checkedInData.contains(selectedPerson)){
+                //    Controller.checkedInData.add(person);
+              //  }
+                parentController.directoryModel.get(selectedPerson.getCardNumber()).set(person);
+               // deletePerson(selectedPerson);
+              //  Constants.rawDirectoryData.add(person);
+              //  Controller.directoryData.add(person);
             }
             else if(!editMode) {
-                Controller.checkedInData.add(person);
+                //Controller.checkedInData.add(person);
+                parentController.checkInModel.add(person);
                 LogManager.appendLogWithTimeStamp(person.getName() + " was added to the directory and signed in with ID: " + person.getId());
                 person.incrementTimesVisited();
             }
@@ -83,11 +94,12 @@ public class AddController implements Initializable {
         }
     }
 
-    public  void deletePerson(Person person){
-        Constants.rawDirectoryData.remove(person);
-        Controller.directoryData.remove(person);
+    private void deletePerson(Person person){
+        //Constants.rawDirectoryData.remove(person);
+       // Controller.directoryData.remove(person);
+
         FileManager.deleteDirectoryFile(person);
-        Controller.checkedInData.remove(person);
+      //  Controller.checkedInData.remove(person);
         if(!editMode){
             LogManager.appendLogWithTimeStamp(person.getName() + " with ID: " + person.getId() + " was deleted from the directory.");
         }
@@ -124,6 +136,7 @@ public class AddController implements Initializable {
         editMode = false;
         if(iCallback != null) iCallback.Callback();
     }
+
     public void setupStage(){
         stage = new Stage();
         stage.setTitle("Add New User");

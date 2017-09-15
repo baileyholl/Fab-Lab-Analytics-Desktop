@@ -2,6 +2,7 @@ package data;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.joda.time.DateTime;
 import util.FileManager;
 
@@ -11,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class Person {
+public class Person{
 
-    private SimpleStringProperty cardNumber;
+    private StringProperty cardNumber;
     private SimpleStringProperty id;
     private SimpleStringProperty name;
     private SimpleStringProperty email;
@@ -82,7 +83,7 @@ public class Person {
         return cardNumber.get();
     }
 
-    public SimpleStringProperty cardNumberProperty() {
+    public StringProperty cardNumberProperty() {
         return cardNumber;
     }
 
@@ -158,5 +159,19 @@ public class Person {
     @Override
     public String toString() {
         return getId() + getStrikes() + getTimesVisited() + getName() + getCardNumber() + getCertifications() + getEmail() + getShopCertification() + getTimeStampHistory();
+    }
+
+    public void set(Person p) {
+        this.cardNumber = p.cardNumber;
+        this.id = p.id;
+        this.name = p.name;
+        this.email = p.email;
+        this.certifications = p.certifications;
+        this.shopCertification  = p.shopCertification;
+        this.notes = p.notes;
+        this.timestamp = p.timestamp;
+        this.timesVisited = p.timesVisited;
+        this.strikes = p.strikes;
+        this.timeStampHistory = p.timeStampHistory;
     }
 }

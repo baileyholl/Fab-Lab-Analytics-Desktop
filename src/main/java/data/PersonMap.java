@@ -1,7 +1,9 @@
 package data;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
+
+import java.util.*;
 
 /**
  * Stores a set of person objects in a map stored by key value of the card input. Used to
@@ -9,10 +11,13 @@ import java.util.LinkedHashMap;
  */
 public class PersonMap {
     /*Stores a map of people where the key is the Card Number and the value is the person object.*/
-    private LinkedHashMap<String, Person> personLinkedHashMap;
+
+    private ObservableMap<String, Person> observableMap;
+    private ArrayList<Person> mapKeys;
 
     public PersonMap(){
-        personLinkedHashMap = new LinkedHashMap<>();
+        observableMap = FXCollections.observableHashMap();
+        mapKeys = new ArrayList<>(observableMap.values());
     }
 
     /**
@@ -22,25 +27,34 @@ public class PersonMap {
     public PersonMap(Collection<Person> collection){
         this();
         for(Person p : collection){
-            this.personLinkedHashMap.put(p.getCardNumber(), p);
+            this.observableMap.put(p.getCardNumber(), p);
         }
     }
 
     public boolean containsValue(Person person){
-        return this.personLinkedHashMap.containsValue(person);
+        return this.observableMap.containsValue(person);
     }
 
     public boolean containsKey(String string){
-        return this.personLinkedHashMap.containsKey(string);
+        return this.observableMap.containsKey(string);
     }
+
     public Person get(String key){
-        return this.personLinkedHashMap.get(key);
+        return this.observableMap.get(key);
     }
+
     public Person put(Person person){
-        return this.personLinkedHashMap.put(person.getCardNumber(), person);
+        return this.observableMap.put(person.getCardNumber(), person);
     }
 
     public Person remove(Person person){
-        return this.personLinkedHashMap.remove(person.getCardNumber());
+        return this.observableMap.remove(person.getCardNumber());
+    }
+
+    /**
+     * @return Returns a list of person objects from the hashmap.
+     */
+    public List<Person> toList(){
+        return mapKeys;
     }
 }

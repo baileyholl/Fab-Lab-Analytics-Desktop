@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public final class FileManager {
@@ -151,9 +152,9 @@ public final class FileManager {
         }
     }
 
-    public static void getDirectoryAsCSV(){
+    public static void getDirectoryAsCSV(Collection<Person> collection){
         String CSVContents = "Card Input, ID, Name, Email, Certifications, Strikes, Notes, Visit Count" + "\n";
-        for(Person p : Constants.rawDirectoryData){
+        for(Person p : collection){
             String row = p.getCardNumber() + "," + p.getId() + "," +p.getName() + "," + p.getEmail() + "," + p.getCertifications() + "," + p.getStrikes() + "," + p.getNotes() + "," + p.getTimesVisited() + "\n";
             CSVContents += row;
         }

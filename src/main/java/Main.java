@@ -34,21 +34,19 @@ public class Main extends Application {
         addController.setRoot(addRoot);
         addController.setupStage();
         mainController.initControllers(addController);
+        addController.initParentController(mainController);
 
 
         //Parent root = FXMLLoader.load(getClass().getResource("/signin.fxml"));
         primaryStage.setTitle("Fab Lab Analytics");
         primaryStage.setScene(new Scene(root, 1060  , 650));
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Would you like to sign out all users?", ButtonType.YES, ButtonType.NO);
-                alert.showAndWait();
-                if (alert.getResult() == ButtonType.YES) {
+        primaryStage.setOnCloseRequest(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Would you like to sign out all users?", ButtonType.YES, ButtonType.NO);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.YES) {
 
-                }else {
-                    Platform.exit();
-                }
+            }else {
+                Platform.exit();
             }
         });
         setUserAgentStylesheet(STYLESHEET_CASPIAN);

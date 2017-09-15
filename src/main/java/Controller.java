@@ -26,8 +26,6 @@ import java.net.URL;
 import java.util.*;
 
 public class Controller implements Initializable, ICallback {
-    public static ObservableList<Person> checkedInData = FXCollections.observableArrayList();
-    public static ObservableList<Person> directoryData = FXCollections.observableArrayList();
 
     @FXML
     TableView<Person> CheckinTable;
@@ -100,22 +98,27 @@ public class Controller implements Initializable, ICallback {
 
     private Person selectedPerson;
 
-    private PersonModel checkInModel;
-    private PersonModel directoryModel;
+    public PersonModel checkInModel;
+    public PersonModel directoryModel;
     private AddController addController;
 
     public void initModel(PersonModel checkInModel, PersonModel directoryModel){
         this.checkInModel = checkInModel;
         this.directoryModel = directoryModel;
+        CheckinTable.setItems(checkInModel.getObservableList());
+        DirectoryTable.setItems(directoryModel.getObservableList());
+
     }
 
     public void initControllers(AddController controller){
+        if(addController != null){
+            throw new IllegalStateException("Controllers already initialized");
+        }
         this.addController = controller;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Constants.rawDirectoryData = new ArrayList<>();
         CIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         CNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         CCertificationsColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
@@ -134,8 +137,6 @@ public class Controller implements Initializable, ICallback {
         DNotesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
         DStrikesColumn.setCellValueFactory(new PropertyValueFactory<>("strikes"));
         DVisitColumn.setCellValueFactory(new PropertyValueFactory<>("timesVisited"));
-        Constants.rawDirectoryData.addAll(Constants.directory.getAllPersons());
-        directoryData.setAll(Constants.rawDirectoryData);
         signInButton.setOnAction(event -> handleSwipe(false));
         idField.setOnAction(event -> handleSwipe(false));
         openFolderMenuButton.setOnAction(event -> FileManager.openFolderExplorer());
@@ -146,11 +147,9 @@ public class Controller implements Initializable, ICallback {
         directoryTab.setOnSelectionChanged(event -> refocusIdField(true));
         checkedInTab.setOnSelectionChanged(event -> refocusIdField(true));
         logTab.setOnSelectionChanged(event -> refocusIdField(true));
-        exportToCSV.setOnAction(event ->  FileManager.getDirectoryAsCSV());
+        exportToCSV.setOnAction(event ->  FileManager.getDirectoryAsCSV(directoryModel.toCollection()));
         aboutButton.setOnAction(event -> WebUtil.openWebpage(Constants.aboutLink));
         conversionButton.setOnAction(event -> FileManager.convertOldGsons());
-        CheckinTable.setItems(checkedInData);
-        DirectoryTable.setItems(directoryData);
         logTextArea.setText(Constants.logContents);
         Platform.runLater(() -> idField.requestFocus());
     }
@@ -163,7 +162,9 @@ public class Controller implements Initializable, ICallback {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + selectedPerson.getName() + " from directory and check in permanently?");
             alert.showAndWait();
             if (alert.getResult() == ButtonType.OK) {
-                addController.deletePerson(selectedPerson);
+                checkInModel.remove(selectedPerson);
+                directoryModel.remove(selectedPerson);
+                FileManager.deleteDirectoryFile(selectedPerson);
             }
         }
     }
@@ -195,9 +196,10 @@ public class Controller implements Initializable, ICallback {
             System.out.println(idText);
             selectedPerson = null;
             addController.editMode = false;
-            for(Person p : Constants.rawDirectoryData){
+            //TODO this is redundant iterations when using a set type.
+            for(Person p : directoryModel.toCollection()){
                 if(p.getCardNumber().equals(idText)){
-                    if(checkedInData.contains(p)){
+                    if(checkInModel.contains(p)){
                         signOut(p, wasForced);
                     }else{
                         signIn(p, wasForced);
@@ -215,14 +217,15 @@ public class Controller implements Initializable, ICallback {
 
     private void signOut(Person p, boolean forced){
         if(!p.getTimeStampHistory().isEmpty()) p.getTimeStampHistory().get(p.getTimeStampHistory().size() - 1);
-        checkedInData.remove(p);
+        checkInModel.remove(p);
         LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed out(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed out with " + "ID: " + p.getId());
     }
     private void signIn(Person p, boolean forced){
         p.incrementTimesVisited();
-        directoryData.removeAll(p);
-        directoryData.add(p);
-        checkedInData.add(p);
+        //Todo: Get using set logic. Persons also maintain their reference in the list so removing and adding them is not necesssary.
+        directoryModel.remove(p);
+        directoryModel.add(p);
+        checkInModel.add(p);
         p.setTimestampProperty(Timestamp.getCurrentTime());
         p.getTimeStampHistory().add(Timestamp.Now());
         LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed in(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed in with " + "ID: " + p.getId());

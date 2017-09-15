@@ -19,7 +19,7 @@ public class Constants {
     public static Directory directory;
     public static String logContents;
 
-    public static ArrayList<Person> rawDirectoryData;
+   // public static ArrayList<Person> rawDirectoryData;
 
     public final static String aboutLink = "https://github.com/baileyholl/Fab-Lab-Analytics-Desktop";
 
