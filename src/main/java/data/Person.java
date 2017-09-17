@@ -174,4 +174,46 @@ public class Person{
         this.strikes = p.strikes;
         this.timeStampHistory = p.timeStampHistory;
     }
+
+    @Override
+    public int hashCode() {
+        int result = cardNumber != null ? cardNumber.hashCode() : 0;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (certifications != null ? certifications.hashCode() : 0);
+        result = 31 * result + (shopCertification != null ? shopCertification.hashCode() : 0);
+        result = 31 * result + (notes != null ? notes.hashCode() : 0);
+        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
+        result = 31 * result + (timesVisited != null ? timesVisited.hashCode() : 0);
+        result = 31 * result + (strikes != null ? strikes.hashCode() : 0);
+        result = 31 * result + (timeStampHistory != null ? timeStampHistory.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Person person = (Person) o;
+
+        if (getCardNumber() != null ? !getCardNumber().equals(person.getCardNumber()) : person.getCardNumber() != null)
+            return false;
+        if (getId() != null ? !getId().equals(person.getId()) : person.getId() != null) return false;
+        if (getName() != null ? !getName().equals(person.getName()) : person.getName() != null) return false;
+        if (getEmail() != null ? !getEmail().equals(person.getEmail()) : person.getEmail() != null) return false;
+        if (getCertifications() != null ? !getCertifications().equals(person.getCertifications()) : person.getCertifications() != null)
+            return false;
+        if (getShopCertification() != null ? !getShopCertification().equals(person.getShopCertification()) : person.getShopCertification() != null)
+            return false;
+        if (getNotes() != null ? !getNotes().equals(person.getNotes()) : person.getNotes() != null) return false;
+        if (getTimestamp() != null ? !getTimestamp().equals(person.getTimestamp()) : person.getTimestamp() != null)
+            return false;
+        if (getTimesVisited() != null ? !getTimesVisited().equals(person.getTimesVisited()) : person.getTimesVisited() != null)
+            return false;
+        if (getStrikes() != null ? !getStrikes().equals(person.getStrikes()) : person.getStrikes() != null)
+            return false;
+        return getTimeStampHistory() != null ? getTimeStampHistory().equals(person.getTimeStampHistory()) : person.getTimeStampHistory() == null;
+    }
 }

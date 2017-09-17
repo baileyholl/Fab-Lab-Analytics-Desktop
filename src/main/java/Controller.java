@@ -140,14 +140,14 @@ public class Controller implements Initializable, ICallback {
         signInButton.setOnAction(event -> handleSwipe(false));
         idField.setOnAction(event -> handleSwipe(false));
         openFolderMenuButton.setOnAction(event -> FileManager.openFolderExplorer());
-        addMenuItem.setOnAction(event -> openAddWindow(""));
+        addMenuItem.setOnAction(event -> openAddWindow("", false));
         editMenuItem.setOnAction(event-> editSelected());
         deleteMenuItem.setOnAction(event -> deleteSelected());
         forceSignInOutMenuItem.setOnAction(event -> forceSignInOut());
         directoryTab.setOnSelectionChanged(event -> refocusIdField(true));
         checkedInTab.setOnSelectionChanged(event -> refocusIdField(true));
         logTab.setOnSelectionChanged(event -> refocusIdField(true));
-        exportToCSV.setOnAction(event ->  FileManager.getDirectoryAsCSV(directoryModel.toCollection()));
+        exportToCSV.setOnAction(event ->  FileManager.getDirectoryAsCSV(directoryModel.getObservableList()));
         aboutButton.setOnAction(event -> WebUtil.openWebpage(Constants.aboutLink));
         conversionButton.setOnAction(event -> FileManager.convertOldGsons());
         logTextArea.setText(Constants.logContents);
@@ -174,8 +174,7 @@ public class Controller implements Initializable, ICallback {
         if(tableView != null){
             int index = tableView.getSelectionModel().getFocusedIndex();
             selectedPerson = tableView.getItems().get(index);
-            addController.editMode = true;
-            openAddWindow(selectedPerson.getCardNumber());
+            openAddWindow(selectedPerson.getCardNumber(), true);
         }
     }
 
@@ -190,29 +189,19 @@ public class Controller implements Initializable, ICallback {
     }
 
     private void handleSwipe(boolean wasForced){
-        String idText = idField.getText();
-        idField.setText("");
-        if(!idText.isEmpty()) {
-            System.out.println(idText);
-            selectedPerson = null;
-            addController.editMode = false;
-            //TODO this is redundant iterations when using a set type.
-            for(Person p : directoryModel.toCollection()){
-                if(p.getCardNumber().equals(idText)){
-                    if(checkInModel.contains(p)){
-                        signOut(p, wasForced);
-                    }else{
-                        signIn(p, wasForced);
-                    }
-                    updateLogDisplay();
-                    return;
-                }
-            }
-            System.out.println("Person not found");
-            openAddWindow(idText);
-        }else{
-            refocusIdField(false);
+        String cardInput = idField.getText();
+        Person directoryPerson = directoryModel.getByCardNumber(cardInput);
+        if(!directoryModel.contains(directoryPerson)){
+            openAddWindow(cardInput, false);
+            return;
         }
+        if(checkInModel.contains(directoryPerson)){
+            signIn(directoryPerson, wasForced);
+            refocusIdField(true);
+            return;
+        }
+        signOut(directoryPerson, wasForced);
+        refocusIdField(true);
     }
 
     private void signOut(Person p, boolean forced){
@@ -222,17 +211,14 @@ public class Controller implements Initializable, ICallback {
     }
     private void signIn(Person p, boolean forced){
         p.incrementTimesVisited();
-        //Todo: Get using set logic. Persons also maintain their reference in the list so removing and adding them is not necesssary.
-        directoryModel.remove(p);
-        directoryModel.add(p);
         checkInModel.add(p);
         p.setTimestampProperty(Timestamp.getCurrentTime());
         p.getTimeStampHistory().add(Timestamp.Now());
         LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed in(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed in with " + "ID: " + p.getId());
     }
 
-    private void openAddWindow(String input){
-        addController.open(this, input, getSelectedPerson());
+    private void openAddWindow(String input, boolean isEditMode){
+        addController.open(this, input, getSelectedPerson(), isEditMode);
     }
 
     private Person getSelectedPerson(){
@@ -255,12 +241,6 @@ public class Controller implements Initializable, ICallback {
 
     @Override
     public void Callback() {
-        if(addController.editMode && selectedPerson != null){
-            LogManager.appendLogWithTimeStamp(selectedPerson.getName() + " with ID: " + selectedPerson.getId() + " was edited.");
-            if(addController.editMode){
-                addController.editMode = false;
-            }
-        }
         selectedPerson = null;
         idField.setText("");
         refocusIdField(false);

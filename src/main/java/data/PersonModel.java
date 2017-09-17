@@ -6,6 +6,7 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import org.hildan.fxgson.FxGson;
 import util.FileManager;
 
@@ -15,14 +16,12 @@ import java.io.FileReader;
 import java.util.Collection;
 
 public class PersonModel {
-    
-    private PersonMap personMap;
+
     /*An observable version of the values in personMap. Changes in the personMap are reflected in this list and vice-versa.*/
     private ObservableList<Person> observablePersonList;
 
     public PersonModel(){
-        personMap = new PersonMap();
-        observablePersonList = FXCollections.observableList( personMap.toList(), param -> new Observable[]{
+        observablePersonList = FXCollections.observableArrayList(param -> new Observable[]{
                 param.idProperty(),
                 param.nameProperty(),
                 param.shopCertificationProperty(),
@@ -34,29 +33,24 @@ public class PersonModel {
                 param.notesProperty()
         });
         observablePersonList.addListener((ListChangeListener<Person>) c -> System.out.println("List changed"));
-        observablePersonList.addAll(personMap.toList());
-
     }
     
-    public Person add(Person p){
-        return this.personMap.put(p);
+    public Boolean add(Person p){
+        return this.observablePersonList.add(p);
     }
 
-    public Person get(String key){
-        return this.personMap.get(key);
+    public Person getByCardNumber(String key){
+        return observablePersonList.stream().filter(p -> p.getCardNumber().equals(key)).findFirst().orElse(null);
     }
     
-    public Person remove(Person p){
-        return this.personMap.remove(p);
+    public Boolean remove(Person p){
+        return this.observablePersonList.remove(p);
     }
 
-    public Boolean contains(Person p){
-        return this.personMap.containsValue(p);
+    public Boolean contains(Person person){
+        return observablePersonList.stream().anyMatch(p -> p.equals(person));
     }
 
-    public Collection<Person> toCollection(){
-        return personMap.toList();
-    }
 
     /**
      * Loads person objects from files into their Gson model and adds them to the map.
