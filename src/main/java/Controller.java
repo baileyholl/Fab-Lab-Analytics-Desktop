@@ -3,29 +3,22 @@ import data.Person;
 import data.PersonModel;
 import data.Timestamp;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.joda.time.DateTime;
 import util.FileManager;
-import util.ICallback;
 import util.LogManager;
 import util.WebUtil;
 
-import java.io.*;
 import java.net.URL;
 import java.util.*;
 
-public class Controller implements Initializable, ICallback {
+public class Controller implements Initializable {
 
     @FXML
     TableView<Person> CheckinTable;
@@ -146,10 +139,12 @@ public class Controller implements Initializable, ICallback {
         forceSignInOutMenuItem.setOnAction(event -> forceSignInOut());
         directoryTab.setOnSelectionChanged(event -> refocusIdField(true));
         checkedInTab.setOnSelectionChanged(event -> refocusIdField(true));
-        logTab.setOnSelectionChanged(event -> refocusIdField(true));
+        logTab.setOnSelectionChanged(event -> {
+            Platform.runLater(()->logTextArea.setScrollTop(Double.MAX_VALUE));
+            refocusIdField(true);
+        });
         exportToCSV.setOnAction(event ->  FileManager.getDirectoryAsCSV(directoryModel.getObservableList()));
         aboutButton.setOnAction(event -> WebUtil.openWebpage(Constants.aboutLink));
-        conversionButton.setOnAction(event -> FileManager.convertOldGsons());
         logTextArea.setText(Constants.logContents);
         Platform.runLater(() -> idField.requestFocus());
     }
@@ -159,12 +154,15 @@ public class Controller implements Initializable, ICallback {
         if(tableView != null) {
             int index = tableView.getSelectionModel().getFocusedIndex();
             selectedPerson = tableView.getItems().get(index);
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + selectedPerson.getName() + " from directory and check in permanently?");
-            alert.showAndWait();
-            if (alert.getResult() == ButtonType.OK) {
-                checkInModel.remove(selectedPerson);
-                directoryModel.remove(selectedPerson);
-                FileManager.deleteDirectoryFile(selectedPerson);
+            if(selectedPerson != null) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete " + selectedPerson.getName() + " from directory and check in permanently?");
+                alert.showAndWait();
+                if (alert.getResult() == ButtonType.OK) {
+                    checkInModel.remove(selectedPerson);
+                    directoryModel.remove(selectedPerson);
+                    FileManager.deleteDirectoryFile(selectedPerson);
+                    LogManager.appendLogWithTimeStamp(selectedPerson.getName() + " with ID: " + selectedPerson.getId() + " was deleted from the directory.");
+                }
             }
         }
     }
@@ -191,11 +189,12 @@ public class Controller implements Initializable, ICallback {
     private void handleSwipe(boolean wasForced){
         String cardInput = idField.getText();
         Person directoryPerson = directoryModel.getByCardNumber(cardInput);
+        System.out.println(directoryPerson);
         if(!directoryModel.contains(directoryPerson)){
             openAddWindow(cardInput, false);
             return;
         }
-        if(checkInModel.contains(directoryPerson)){
+        if(!checkInModel.contains(directoryPerson)){
             signIn(directoryPerson, wasForced);
             refocusIdField(true);
             return;
@@ -208,17 +207,20 @@ public class Controller implements Initializable, ICallback {
         if(!p.getTimeStampHistory().isEmpty()) p.getTimeStampHistory().get(p.getTimeStampHistory().size() - 1);
         checkInModel.remove(p);
         LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed out(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed out with " + "ID: " + p.getId());
+        idField.clear();
     }
-    private void signIn(Person p, boolean forced){
+    public void signIn(Person p, boolean forced){
         p.incrementTimesVisited();
         checkInModel.add(p);
         p.setTimestampProperty(Timestamp.getCurrentTime());
         p.getTimeStampHistory().add(Timestamp.Now());
         LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed in(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed in with " + "ID: " + p.getId());
+        invalidateViews();
+        idField.clear();
     }
 
     private void openAddWindow(String input, boolean isEditMode){
-        addController.open(this, input, getSelectedPerson(), isEditMode);
+        addController.open(input, getSelectedPerson(), isEditMode);
     }
 
     private Person getSelectedPerson(){
@@ -239,14 +241,7 @@ public class Controller implements Initializable, ICallback {
         }
     }
 
-    @Override
-    public void Callback() {
-        selectedPerson = null;
-        idField.setText("");
-        refocusIdField(false);
-    }
-
-    private void refocusIdField(boolean runLater){
+    public void refocusIdField(boolean runLater){
         updateLogDisplay();
         if(runLater){
             Platform.runLater(()-> idField.requestFocus());
@@ -255,8 +250,13 @@ public class Controller implements Initializable, ICallback {
         idField.requestFocus();
     }
 
+    public void invalidateViews(){
+        DirectoryTable.refresh();
+        CheckinTable.refresh();
+        updateLogDisplay();
+    }
+
     private void updateLogDisplay(){
         logTextArea.setText(Constants.logContents);
     }
-
 }

@@ -1,4 +1,3 @@
-import data.Constants;
 import data.Person;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import util.FileManager;
-import util.ICallback;
 import util.LogManager;
 
 import java.net.URL;
@@ -39,7 +37,6 @@ public class AddController implements Initializable {
 
     private Stage stage;
     private Parent root;
-    private ICallback iCallback;
     private String idValue;
     private Person selectedPerson;
     private Controller parentController;
@@ -79,29 +76,24 @@ public class AddController implements Initializable {
     private void addPersonToDirectory() {
         Person person = new Person(inputField.getText(), idNumberField.getText(),nameField.getText(), emailField.getText(),
                 certsField.getText(), shopField.getText(), notesField.getText(), strikesField.getText());
-        parentController.checkInModel.add(person);
         parentController.directoryModel.add(person);
+        parentController.signIn(person, false);
         LogManager.appendLogWithTimeStamp(person.getName() + " was added to the directory and signed in with ID: " + person.getId());
-        person.incrementTimesVisited();
         FileManager.saveDirectoryJsonFile(person);
         close();
-        if(iCallback != null) iCallback.Callback();
     }
 
     private void editPerson(Person person){
         LogManager.appendLogWithTimeStamp(person.getName() + " with ID: " + person.getId() + " was edited.");
-    }
-
-    private void deletePerson(Person person){
-        parentController.checkInModel.remove(person);
-        parentController.directoryModel.remove(person);
         FileManager.deleteDirectoryFile(person);
-        LogManager.appendLogWithTimeStamp(person.getName() + " with ID: " + person.getId() + " was deleted from the directory.");
+        person.set(new Person(inputField.getText(), idNumberField.getText(),nameField.getText(), emailField.getText(),
+                certsField.getText(), shopField.getText(), notesField.getText(), strikesField.getText()));
+        FileManager.saveDirectoryJsonFile(person);
+        close();
     }
 
-    public void open(ICallback iCallback, String idValue, Person selectedPerson, boolean editMode){
+    public void open(String idValue, Person selectedPerson, boolean editMode){
         this.idValue = idValue;
-        this.iCallback = iCallback;
         this.selectedPerson = selectedPerson;
         inputField.setText(idValue);
         strikesField.setText("0");
@@ -127,7 +119,8 @@ public class AddController implements Initializable {
         strikesField.clear();
         stage.close();
         selectedPerson = null;
-        if(iCallback != null) iCallback.Callback();
+        parentController.invalidateViews();
+        parentController.refocusIdField(true);
     }
 
     public void setupStage(){

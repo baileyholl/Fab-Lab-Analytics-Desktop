@@ -161,6 +161,10 @@ public class Person{
         return getId() + getStrikes() + getTimesVisited() + getName() + getCardNumber() + getCertifications() + getEmail() + getShopCertification() + getTimeStampHistory();
     }
 
+    /**
+     * Sets the data of this object to the data from the given person.
+     * @param p Set of data to set this person object to.
+     */
     public void set(Person p) {
         this.cardNumber = p.cardNumber;
         this.id = p.id;

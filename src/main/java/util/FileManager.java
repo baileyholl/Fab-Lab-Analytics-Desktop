@@ -190,38 +190,4 @@ public final class FileManager {
             }
         }
     }
-
-    //Used to convert gson files from version 1.1.x to 1.2.x.
-    @Deprecated
-    public static void convertOldGsons(){
-        ArrayList<Person> directory = new ArrayList<>();
-        for(File f : Constants.directoryFiles){
-            if(!f.isHidden() && f.exists()){
-                try(BufferedReader br = new BufferedReader(new FileReader(f))){
-                    Gson gson = new Gson();
-                    //convert the json string back to object
-                    Person person = gson.fromJson(br, Person.class);
-                    Directory.validateUpToDateJson(person);
-                    Constants.directory.put(person.getCardNumber(), person);
-                    directory.add(person);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-        Gson gson = FxGson.create();
-        //Save directory files in fxgson
-        for(Person person : directory) {
-            Path path = Paths.get(Constants.directoryFolder.toString(), person.getName().replace(" ", "_") + person.getId() + ".json");
-            FileManager.deleteFile(path);
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toString()))) {
-                writer.write(gson.toJson(person));
-                writer.flush();
-                writer.close();
-            } catch (Exception e) {
-                System.out.println(e.toString());
-            }
-        }
-    }
-
 }

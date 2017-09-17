@@ -16,7 +16,6 @@ public class Constants {
     public static File analyticsFolder;
     public static ArrayList<File> directoryFiles;
     public static File logFile;
-    public static Directory directory;
     public static String logContents;
 
    // public static ArrayList<Person> rawDirectoryData;

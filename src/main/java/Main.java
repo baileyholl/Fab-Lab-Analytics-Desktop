@@ -55,7 +55,6 @@ public class Main extends Application {
 
     private void setupFiles(){
         FileManager.setupFolders();
-        Constants.directory = new Directory(Constants.directoryFiles);
     }
 
     public static void main(String[] args) {
