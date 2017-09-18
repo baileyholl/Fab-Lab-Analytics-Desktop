@@ -37,7 +37,6 @@ public class AddController implements Initializable {
 
     private Stage stage;
     private Parent root;
-    private String idValue;
     private Person selectedPerson;
     private Controller parentController;
     private boolean isEditMode;
@@ -93,7 +92,6 @@ public class AddController implements Initializable {
     }
 
     public void open(String idValue, Person selectedPerson, boolean editMode){
-        this.idValue = idValue;
         this.selectedPerson = selectedPerson;
         inputField.setText(idValue);
         strikesField.setText("0");

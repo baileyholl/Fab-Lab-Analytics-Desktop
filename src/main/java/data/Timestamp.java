@@ -8,7 +8,7 @@ public class Timestamp {
 
     private String start;
     private String end;
-    private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("MM-dd-yyyy hh:mm a");
+    public static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("MM-dd-yyyy hh:mm a");
 
     public Timestamp(String start, String end){
         this.start = start;
@@ -24,6 +24,7 @@ public class Timestamp {
         start = "";
         end = "";
     }
+
     public static Timestamp Now(){
         return new Timestamp(getCurrentTime());
     }

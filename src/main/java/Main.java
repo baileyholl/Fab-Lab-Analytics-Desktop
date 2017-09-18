@@ -1,5 +1,6 @@
 import data.Constants;
 import data.Directory;
+import data.Person;
 import data.PersonModel;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -35,8 +36,6 @@ public class Main extends Application {
         addController.setupStage();
         mainController.initControllers(addController);
         addController.initParentController(mainController);
-
-
         //Parent root = FXMLLoader.load(getClass().getResource("/signin.fxml"));
         primaryStage.setTitle("Fab Lab Analytics");
         primaryStage.setScene(new Scene(root, 1060  , 650));
@@ -44,7 +43,7 @@ public class Main extends Application {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Would you like to sign out all users?", ButtonType.YES, ButtonType.NO);
             alert.showAndWait();
             if (alert.getResult() == ButtonType.YES) {
-
+                mainController.signOutAll();
             }else {
                 Platform.exit();
             }

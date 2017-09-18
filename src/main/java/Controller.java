@@ -203,12 +203,14 @@ public class Controller implements Initializable {
         refocusIdField(true);
     }
 
-    private void signOut(Person p, boolean forced){
-        if(!p.getTimeStampHistory().isEmpty()) p.getTimeStampHistory().get(p.getTimeStampHistory().size() - 1);
+    public void signOut(Person p, boolean forced){
+        if(!p.getTimeStampHistory().isEmpty()) p.getTimeStampHistory().get(p.getTimeStampHistory().size() - 1).setEnd(Timestamp.getCurrentTime());
+        FileManager.saveDirectoryJsonFile(p);
         checkInModel.remove(p);
         LogManager.appendLogWithTimeStamp(forced ? p.getName() + " was signed out(MANUAL) with " + "ID: " + p.getId() : p.getName() + " was signed out with " + "ID: " + p.getId());
         idField.clear();
     }
+
     public void signIn(Person p, boolean forced){
         p.incrementTimesVisited();
         checkInModel.add(p);
@@ -221,6 +223,12 @@ public class Controller implements Initializable {
 
     private void openAddWindow(String input, boolean isEditMode){
         addController.open(input, getSelectedPerson(), isEditMode);
+    }
+
+    public void signOutAll(){
+        for(Person p : checkInModel.getObservableList()){
+            signOut(p, false);
+        }
     }
 
     private Person getSelectedPerson(){
