@@ -1,6 +1,7 @@
 package data;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -43,5 +44,15 @@ public class Timestamp {
 
     public void setEnd(String end) {
         this.end = end;
+    }
+
+    /**
+     * @return Returns the duration between the start and end times.
+     */
+    public Duration getTimeLength(){
+        if(end == null || start == null || start.isEmpty() || end.isEmpty()){
+            return new Duration(0,0);
+        }
+        return new Duration(dateTimeFormatter.parseDateTime(start), dateTimeFormatter.parseDateTime(end));
     }
 }

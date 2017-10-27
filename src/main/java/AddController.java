@@ -101,6 +101,7 @@ public class AddController implements Initializable {
             nameField.setText(selectedPerson.getName());
             idNumberField.setText(selectedPerson.getId());
             certsField.setText(selectedPerson.getCertifications());
+            shopField.setText(selectedPerson.getShopCertification());
             notesField.setText(selectedPerson.getNotes());
             emailField.setText(selectedPerson.getEmail());
             strikesField.setText(selectedPerson.getStrikes());
@@ -115,6 +116,7 @@ public class AddController implements Initializable {
         certsField.clear();
         notesField.clear();
         strikesField.clear();
+        shopField.clear();
         stage.close();
         selectedPerson = null;
         parentController.invalidateViews();

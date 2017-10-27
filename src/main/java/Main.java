@@ -1,5 +1,4 @@
 import data.Constants;
-import data.Directory;
 import data.Person;
 import data.PersonModel;
 import javafx.application.Application;

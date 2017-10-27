@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
+@Deprecated
 public class Directory {
     private LinkedHashMap<String, Person> directory;
 

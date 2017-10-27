@@ -18,8 +18,6 @@ public class Constants {
     public static File logFile;
     public static String logContents;
 
-   // public static ArrayList<Person> rawDirectoryData;
-
     public final static String aboutLink = "https://github.com/baileyholl/Fab-Lab-Analytics-Desktop";
 
 }

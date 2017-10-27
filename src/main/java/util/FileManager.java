@@ -3,7 +3,6 @@ package util;
 import com.google.gson.Gson;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import data.Constants;
-import data.Directory;
 import data.Person;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Control;
@@ -144,6 +143,7 @@ public final class FileManager {
         Path path = Paths.get(Constants.directoryFolder.toString(), selectedPerson.getName().replace(" ", "_")+selectedPerson.getId()+ ".json");
         return deleteFile(path);
     }
+
     public static void openFolderExplorer() {
         try {
             Desktop.getDesktop().open(Constants.mainFolder);
@@ -153,11 +153,18 @@ public final class FileManager {
     }
 
     public static void getDirectoryAsCSV(Collection<Person> collection){
-        String CSVContents = "Card Input, ID, Name, Email, Certifications, Strikes, Notes, Visit Count" + "\n";
+        String CSVContents = "";
+        CSVContents += "Total Time Collected:" + "," +  AnalyticUtil.getTotalTimeSpentInText(collection) + "," +
+                "Total Number of People: " +  collection.size() + "\n";
+        CSVContents += "Average Time Per Person: " + "," + AnalyticUtil.getAverageTimeSpent(collection) + "\n";
+        String visitorHeaders = "Card Input, ID, Name, Email, Certifications, Shop Certification, Strikes, Notes, Visit Count" + "\n";
+        CSVContents += visitorHeaders;
         for(Person p : collection){
-            String row = p.getCardNumber() + "," + p.getId() + "," +p.getName() + "," + p.getEmail() + "," + p.getCertifications() + "," + p.getStrikes() + "," + p.getNotes() + "," + p.getTimesVisited() + "\n";
+            String row = p.getCardNumber() + "," + p.getId() + "," +p.getName() + "," + p.getEmail() + "," + p.getCertifications() + "," + p.getShopCertification() +
+                    "," + p.getStrikes() + "," + p.getNotes() + "," + p.getTimesVisited() + "\n";
             CSVContents += row;
         }
+
         DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("MM-dd-yyyy");
         Path path = Paths.get(Constants.analyticsFolder.toString(), "Directory" + dateTimeFormatter.print(DateTime.now()) + ".csv");
         try {
