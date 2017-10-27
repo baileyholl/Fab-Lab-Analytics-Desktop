@@ -66,4 +66,18 @@ public class AnalyticUtil {
         }
         return getTotalTimeSpentInText(millis / personCollection.size());
     }
+
+    public static int getVisitCount(Collection<Person> personCollection){
+        int visits = 0;
+        for(Person p : personCollection){
+            visits += Integer.valueOf(p.getTimesVisited());
+        }
+        return visits;
+    }
+
+    public static String getAverageTimePerVisit(Collection<Person> collection){
+        long visits = getVisitCount(collection);
+        long time = getTotalTimeSpent(collection);
+        return getTotalTimeSpentInText(time/visits);
+    }
 }

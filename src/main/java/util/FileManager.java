@@ -153,23 +153,28 @@ public final class FileManager {
     }
 
     public static void getDirectoryAsCSV(Collection<Person> collection){
-        String CSVContents = "";
+        String CSVContents = "Timestamp data gathered starting September 17th 2017. \n";
         CSVContents += "Total Time Collected:" + "," +  AnalyticUtil.getTotalTimeSpentInText(collection) + "," +
-                "Total Number of People: " +  collection.size() + "\n";
-        CSVContents += "Average Time Per Person: " + "," + AnalyticUtil.getAverageTimeSpent(collection) + "\n";
+                "Total Number of People: " +  collection.size() + "," +"Average Time Per Person: " + "," + AnalyticUtil.getAverageTimeSpent(collection) + "\n";
+        CSVContents += "Total Number of Visits: " + AnalyticUtil.getVisitCount(collection) + "," +"Average Time Per Visit: " + AnalyticUtil.getAverageTimePerVisit(collection)+ "," +
+                "Average Time Per Person: " + "," + AnalyticUtil.getAverageTimeSpent(collection) + "\n";
         String visitorHeaders = "Card Input, ID, Name, Email, Certifications, Shop Certification, Strikes, Notes, Visit Count" + "\n";
         CSVContents += visitorHeaders;
+        StringBuilder CSVContentsBuilder = new StringBuilder(CSVContents);
         for(Person p : collection){
             String row = p.getCardNumber() + "," + p.getId() + "," +p.getName() + "," + p.getEmail() + "," + p.getCertifications() + "," + p.getShopCertification() +
                     "," + p.getStrikes() + "," + p.getNotes() + "," + p.getTimesVisited() + "\n";
-            CSVContents += row;
+            CSVContentsBuilder.append(row);
         }
+        CSVContents = CSVContentsBuilder.toString();
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("MM-dd-yyyy");
         Path path = Paths.get(Constants.analyticsFolder.toString(), "Directory" + dateTimeFormatter.print(DateTime.now()) + ".csv");
         try {
             FileUtils.writeStringToFile(path.toFile(), CSVContents, Charset.defaultCharset());
             Desktop.getDesktop().open(Constants.analyticsFolder);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "File generated!");
+            alert.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR, "Failed creating file." + e.getMessage());
