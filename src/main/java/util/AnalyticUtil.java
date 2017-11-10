@@ -9,7 +9,7 @@ import java.util.Collection;
  */
 public class AnalyticUtil {
 
-    public static final int DAYS_IN_MILLIS = 86400000; //86 million
+    public static final int DAY_IN_MILLIS = 86400000; //86 million
     public static final int HOUR_IN_MILLIS = 3600000; //3.6 million
     public static final int MINUTE_IN_MILLIS = 60000; // 60 thousand
     /**
@@ -41,8 +41,8 @@ public class AnalyticUtil {
     public static String getTotalTimeSpentInText(Collection<Person> personCollection){
         int days, hours, minutes;
         long millis = getTotalTimeSpent(personCollection);
-        days =(int) (millis / DAYS_IN_MILLIS);
-        millis = millis % DAYS_IN_MILLIS;
+        days =(int) (millis / DAY_IN_MILLIS);
+        millis = millis % DAY_IN_MILLIS;
         hours = (int)(millis / HOUR_IN_MILLIS);
         millis = millis % HOUR_IN_MILLIS;
         minutes = (int) (millis/MINUTE_IN_MILLIS);
@@ -51,8 +51,8 @@ public class AnalyticUtil {
 
     public static String getTotalTimeSpentInText(long millis){
         int days, hours, minutes;
-        days =(int) (millis / DAYS_IN_MILLIS);
-        millis = millis % DAYS_IN_MILLIS;
+        days =(int) (millis / DAY_IN_MILLIS);
+        millis = millis % DAY_IN_MILLIS;
         hours = (int)(millis / HOUR_IN_MILLIS);
         millis = millis % HOUR_IN_MILLIS;
         minutes = (int) (millis/MINUTE_IN_MILLIS);

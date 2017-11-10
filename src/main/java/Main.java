@@ -1,17 +1,16 @@
 import data.Constants;
-import data.Person;
 import data.PersonModel;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import util.FileManager;
+
+import java.util.Timer;
 
 public class Main extends Application {
     @Override
@@ -49,6 +48,9 @@ public class Main extends Application {
         });
         setUserAgentStylesheet(STYLESHEET_CASPIAN);
         primaryStage.show();
+        APIBackgroundService apiBackgroundService = new APIBackgroundService();
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(apiBackgroundService, 0, 10*1000);
     }
 
     private void setupFiles(){

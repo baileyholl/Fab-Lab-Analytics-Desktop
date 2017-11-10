@@ -1,11 +1,9 @@
 package util;
 
 import com.google.gson.Gson;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import data.Constants;
 import data.Person;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Control;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,8 +11,6 @@ import org.hildan.fxgson.FxGson;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
-import javax.security.auth.login.LoginContext;
 import java.awt.*;
 import java.io.*;
 import java.nio.charset.Charset;

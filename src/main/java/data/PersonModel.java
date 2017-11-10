@@ -32,7 +32,7 @@ public class PersonModel {
                 param.emailProperty(),
                 param.notesProperty()
         });
-        observablePersonList.addListener((ListChangeListener<Person>) c -> System.out.println("List changed"));
+        observablePersonList.addListener((ListChangeListener<Person>) c -> System.out.println(""));
     }
     
     public Boolean add(Person p){
