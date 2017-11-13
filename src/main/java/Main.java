@@ -48,9 +48,9 @@ public class Main extends Application {
         });
         setUserAgentStylesheet(STYLESHEET_CASPIAN);
         primaryStage.show();
-        APIBackgroundService apiBackgroundService = new APIBackgroundService();
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(apiBackgroundService, 0, 10*1000);
+        //APIBackgroundService apiBackgroundService = new APIBackgroundService();
+        //Timer timer = new Timer();
+        //timer.scheduleAtFixedRate(apiBackgroundService, 0, 10*1000);
     }
 
     private void setupFiles(){

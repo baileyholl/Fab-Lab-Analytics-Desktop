@@ -3,6 +3,7 @@ import data.Person;
 import data.PersonModel;
 import data.Timestamp;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -65,9 +66,13 @@ public class Controller implements Initializable {
     @FXML
     TextField idField;
     @FXML
+    TextField searchField;
+    @FXML
     Tab directoryTab;
     @FXML
     Tab checkedInTab;
+    @FXML
+    TabPane tabPane;
     @FXML
     Tab logTab;
     @FXML
@@ -91,8 +96,8 @@ public class Controller implements Initializable {
 
     private Person selectedPerson;
 
-    public PersonModel checkInModel;
-    public PersonModel directoryModel;
+    private PersonModel checkInModel;
+    protected PersonModel directoryModel;
     private AddController addController;
 
     public void initModel(PersonModel checkInModel, PersonModel directoryModel){
@@ -132,13 +137,15 @@ public class Controller implements Initializable {
         DVisitColumn.setCellValueFactory(new PropertyValueFactory<>("timesVisited"));
         signInButton.setOnAction(event -> handleSwipe(false));
         idField.setOnAction(event -> handleSwipe(false));
+
+        searchField.setOnKeyTyped(event -> focusSearch());
         openFolderMenuButton.setOnAction(event -> FileManager.openFolderExplorer());
         addMenuItem.setOnAction(event -> openAddWindow("", false));
         editMenuItem.setOnAction(event-> editSelected());
         deleteMenuItem.setOnAction(event -> deleteSelected());
         forceSignInOutMenuItem.setOnAction(event -> forceSignInOut());
-        directoryTab.setOnSelectionChanged(event -> refocusIdField(true));
-        checkedInTab.setOnSelectionChanged(event -> refocusIdField(true));
+        //directoryTab.setOnSelectionChanged(event -> refocusIdField(true));
+        //checkedInTab.setOnSelectionChanged(event -> refocusIdField(true));
         logTab.setOnSelectionChanged(event -> {
             Platform.runLater(()->logTextArea.setScrollTop(Double.MAX_VALUE));
             refocusIdField(true);
@@ -147,6 +154,17 @@ public class Controller implements Initializable {
         aboutButton.setOnAction(event -> WebUtil.openWebpage(Constants.aboutLink));
         logTextArea.setText(Constants.logContents);
         Platform.runLater(() -> idField.requestFocus());
+    }
+
+    private void focusSearch() {
+        for(int i = 0; i < DirectoryTable.getItems().size(); i++){
+            if(DNameColumn.getCellData(i).toLowerCase().contains(searchField.getText().toLowerCase())){
+                tabPane.getSelectionModel().select(directoryTab);
+                DirectoryTable.getFocusModel().focus(i);
+                DirectoryTable.scrollTo(i);
+                break;
+            }
+        }
     }
 
     private void deleteSelected() {
