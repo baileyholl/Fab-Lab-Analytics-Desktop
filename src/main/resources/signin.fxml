@@ -54,6 +54,7 @@
                                  <columns>
                                     <TableColumn fx:id="ClabCertColumn" prefWidth="97.0" text="Lab" />
                                     <TableColumn fx:id="CshopCertColumn" prefWidth="75.0" text="Shop" />
+                                    <TableColumn fx:id="CWaiverColumn" prefWidth="75.0" text="Waiver" />
                                  </columns></TableColumn>
                               <TableColumn fx:id="CStrikesColumn" prefWidth="182.0" text="Strikes" />
                               <TableColumn fx:id="CNotesColumn" minWidth="0.0" prefWidth="336.0" text="Notes" />
@@ -80,6 +81,7 @@
                                  <columns>
                                     <TableColumn fx:id="DlabCertColumn" prefWidth="97.0" text="Lab" />
                                     <TableColumn fx:id="DshopCertColumn" prefWidth="75.0" text="Shop" />
+                                    <TableColumn fx:id="DWaiverColumn" prefWidth="75.0" text="Waiver" />
                                  </columns></TableColumn>
                               <TableColumn fx:id="DStrikesColumn" prefWidth="75.0" text="Strikes" />
                               <TableColumn fx:id="DNotesColumn" minWidth="0.0" prefWidth="225.3333740234375" text="Notes" />

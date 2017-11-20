@@ -196,6 +196,9 @@ public final class FileManager {
             if(person.shopCertificationProperty() == null || person.getShopCertification() == null){
                 person.setShopCertification("");
             }
+            if(person.signedWaiverProperty() == null || person.getSignedWaiver() == null){
+                person.setSignedWaiver("No");
+            }
         }
     }
 }

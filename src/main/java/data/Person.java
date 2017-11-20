@@ -22,12 +22,13 @@ public class Person{
     private SimpleStringProperty certifications;
     private SimpleStringProperty shopCertification;
     private SimpleStringProperty notes;
+    private SimpleStringProperty signedWaiver;
     private transient SimpleStringProperty timestamp;
     private SimpleStringProperty timesVisited;
     private SimpleStringProperty strikes;
     private ArrayList<Timestamp> timeStampHistory;
 
-    public Person(String cardNumber, String ID, String name, String email, String certifications, String shopCertification, String notes, String strikes){
+    public Person(String cardNumber, String ID, String name, String email, String certifications, String shopCertification, String notes, String strikes, String signedWaiver){
         this.cardNumber = new SimpleStringProperty(cardNumber);
         this.id = new SimpleStringProperty(ID);
         this.name = new SimpleStringProperty(name);
@@ -39,6 +40,7 @@ public class Person{
         this.timesVisited = new SimpleStringProperty("0");
         this.strikes = new SimpleStringProperty(strikes);
         this.timeStampHistory = new ArrayList<>();
+        this.signedWaiver = new SimpleStringProperty(signedWaiver);
     }
 
     public void incrementTimesVisited(){
@@ -134,6 +136,9 @@ public class Person{
     }
 
     public String getShopCertification() {
+        if(shopCertification == null){
+            setShopCertification("");
+        }
         return shopCertification.get();
     }
 
@@ -148,6 +153,7 @@ public class Person{
         this.shopCertification.set(shopCertification);
     }
 
+
     public ArrayList<Timestamp> getTimeStampHistory() {
         return timeStampHistory;
     }
@@ -156,9 +162,27 @@ public class Person{
         this.timeStampHistory = timeStampHistory;
     }
 
+    public String getSignedWaiver() {
+        if(signedWaiver == null){
+            setSignedWaiver("No");
+        }
+        return signedWaiver.get();
+    }
+
+    public SimpleStringProperty signedWaiverProperty() {
+        return signedWaiver;
+    }
+
+    public void setSignedWaiver(String signedWaiver) {
+        if(this.signedWaiver == null){
+            this.signedWaiver = new SimpleStringProperty();
+        }
+        this.signedWaiver.set(signedWaiver);
+    }
+
     @Override
     public String toString() {
-        return getId() + getStrikes() + getTimesVisited() + getName() + getCardNumber() + getCertifications() + getEmail() + getShopCertification() + getTimeStampHistory();
+        return getId() + getStrikes() + getTimesVisited() + getName() + getCardNumber() + getCertifications() + getEmail() + getShopCertification() + getTimeStampHistory() + getSignedWaiver();
     }
 
     /**
@@ -177,6 +201,7 @@ public class Person{
         this.timesVisited = p.timesVisited;
         this.strikes = p.strikes;
         this.timeStampHistory = p.timeStampHistory;
+        this.signedWaiver = p.signedWaiver;
     }
 
     @Override
@@ -192,6 +217,7 @@ public class Person{
         result = 31 * result + (timesVisited != null ? timesVisited.hashCode() : 0);
         result = 31 * result + (strikes != null ? strikes.hashCode() : 0);
         result = 31 * result + (timeStampHistory != null ? timeStampHistory.hashCode() : 0);
+        result = 31 * result + (signedWaiver != null ? signedWaiver.hashCode() : 0);
         return result;
     }
 
@@ -202,22 +228,21 @@ public class Person{
 
         Person person = (Person) o;
 
-        if (getCardNumber() != null ? !getCardNumber().equals(person.getCardNumber()) : person.getCardNumber() != null)
+        if (cardNumber != null ? !cardNumber.equals(person.cardNumber) : person.cardNumber != null) return false;
+        if (id != null ? !id.equals(person.id) : person.id != null) return false;
+        if (name != null ? !name.equals(person.name) : person.name != null) return false;
+        if (email != null ? !email.equals(person.email) : person.email != null) return false;
+        if (certifications != null ? !certifications.equals(person.certifications) : person.certifications != null)
             return false;
-        if (getId() != null ? !getId().equals(person.getId()) : person.getId() != null) return false;
-        if (getName() != null ? !getName().equals(person.getName()) : person.getName() != null) return false;
-        if (getEmail() != null ? !getEmail().equals(person.getEmail()) : person.getEmail() != null) return false;
-        if (getCertifications() != null ? !getCertifications().equals(person.getCertifications()) : person.getCertifications() != null)
+        if (shopCertification != null ? !shopCertification.equals(person.shopCertification) : person.shopCertification != null)
             return false;
-        if (getShopCertification() != null ? !getShopCertification().equals(person.getShopCertification()) : person.getShopCertification() != null)
+        if (notes != null ? !notes.equals(person.notes) : person.notes != null) return false;
+        if (signedWaiver != null ? !signedWaiver.equals(person.signedWaiver) : person.signedWaiver != null)
             return false;
-        if (getNotes() != null ? !getNotes().equals(person.getNotes()) : person.getNotes() != null) return false;
-        if (getTimestamp() != null ? !getTimestamp().equals(person.getTimestamp()) : person.getTimestamp() != null)
+        if (timestamp != null ? !timestamp.equals(person.timestamp) : person.timestamp != null) return false;
+        if (timesVisited != null ? !timesVisited.equals(person.timesVisited) : person.timesVisited != null)
             return false;
-        if (getTimesVisited() != null ? !getTimesVisited().equals(person.getTimesVisited()) : person.getTimesVisited() != null)
-            return false;
-        if (getStrikes() != null ? !getStrikes().equals(person.getStrikes()) : person.getStrikes() != null)
-            return false;
-        return getTimeStampHistory() != null ? getTimeStampHistory().equals(person.getTimeStampHistory()) : person.getTimeStampHistory() == null;
+        if (strikes != null ? !strikes.equals(person.strikes) : person.strikes != null) return false;
+        return timeStampHistory != null ? timeStampHistory.equals(person.timeStampHistory) : person.timeStampHistory == null;
     }
 }

@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import util.FileManager;
@@ -34,6 +35,8 @@ public class AddController implements Initializable {
     Button okButton;
     @FXML
     Button cancelButton;
+    @FXML
+    CheckBox waiverBox;
 
     private Stage stage;
     private Parent root;
@@ -54,6 +57,7 @@ public class AddController implements Initializable {
         idNumberField.setOnAction(event -> okButton.fire());
         nameField.setOnAction(event -> okButton.fire());
         certsField.setOnAction(event -> okButton.fire());
+        shopField.setOnAction(event -> okButton.fire());
         strikesField.setOnAction(event -> okButton.fire());
         okButton.setOnAction(event -> completeAction());
         cancelButton.setOnAction(event -> close());
@@ -73,8 +77,9 @@ public class AddController implements Initializable {
     }
 
     private void addPersonToDirectory() {
+
         Person person = new Person(inputField.getText(), idNumberField.getText(),nameField.getText(), emailField.getText(),
-                certsField.getText(), shopField.getText(), notesField.getText(), strikesField.getText());
+                certsField.getText(), shopField.getText(), notesField.getText(), strikesField.getText(), getStringFromCheck(waiverBox));
         parentController.directoryModel.add(person);
         parentController.signIn(person, false);
         LogManager.appendLogWithTimeStamp(person.getName() + " was added to the directory and signed in with ID: " + person.getId());
@@ -86,7 +91,7 @@ public class AddController implements Initializable {
         LogManager.appendLogWithTimeStamp(person.getName() + " with ID: " + person.getId() + " was edited.");
         FileManager.deleteDirectoryFile(person);
         person.set(new Person(inputField.getText(), idNumberField.getText(),nameField.getText(), emailField.getText(),
-                certsField.getText(), shopField.getText(), notesField.getText(), strikesField.getText()));
+                certsField.getText(), shopField.getText(), notesField.getText(), strikesField.getText(), getStringFromCheck(waiverBox)));
         FileManager.saveDirectoryJsonFile(person);
         close();
     }
@@ -105,8 +110,13 @@ public class AddController implements Initializable {
             notesField.setText(selectedPerson.getNotes());
             emailField.setText(selectedPerson.getEmail());
             strikesField.setText(selectedPerson.getStrikes());
+            if(selectedPerson.getSignedWaiver().equals("Yes"))
+                waiverBox.setSelected(true);
         }
         stage.show();
+    }
+    private String getStringFromCheck(CheckBox checkBox){
+        return checkBox.isSelected() ? "Yes" : "No";
     }
 
     private void close(){
@@ -117,6 +127,7 @@ public class AddController implements Initializable {
         notesField.clear();
         strikesField.clear();
         shopField.clear();
+        waiverBox.setSelected(false);
         stage.close();
         selectedPerson = null;
         parentController.invalidateViews();
@@ -126,7 +137,7 @@ public class AddController implements Initializable {
     public void setupStage(){
         stage = new Stage();
         stage.setTitle("Add New User");
-        stage.setScene(new Scene(root,325  , 400));
+        stage.setScene(new Scene(root,310  , 436));
         stage.setResizable(false);
         stage.setOnCloseRequest(event -> close());
     }

@@ -30,7 +30,8 @@ public class PersonModel {
                 param.certificationsProperty(),
                 param.cardNumberProperty(),
                 param.emailProperty(),
-                param.notesProperty()
+                param.notesProperty(),
+                param.signedWaiverProperty()
         });
         observablePersonList.addListener((ListChangeListener<Person>) c -> System.out.println(""));
     }
@@ -62,6 +63,7 @@ public class PersonModel {
                 try(BufferedReader br = new BufferedReader(new FileReader(f))){
                     Gson gson = FxGson.create();
                     Person person = gson.fromJson(br, Person.class);
+                    //System.out.println("Person is: " + person);
                     FileManager.validateUpToDateJson(person);
                     add(person);
                 }catch (Exception e){

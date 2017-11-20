@@ -10,9 +10,14 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import util.FileManager;
 
+import java.util.ConcurrentModificationException;
 import java.util.Timer;
 
 public class Main extends Application {
+
+    public static final String VERSION = "1.3.2";
+
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         setupFiles();
@@ -35,15 +40,21 @@ public class Main extends Application {
         mainController.initControllers(addController);
         addController.initParentController(mainController);
         //Parent root = FXMLLoader.load(getClass().getResource("/signin.fxml"));
-        primaryStage.setTitle("Fab Lab Analytics");
+        primaryStage.setTitle("Fab Lab Analytics "  + getVersion());
         primaryStage.setScene(new Scene(root, 1060  , 650));
         primaryStage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Would you like to sign out all users?", ButtonType.YES, ButtonType.NO);
             alert.showAndWait();
             if (alert.getResult() == ButtonType.YES) {
-                mainController.signOutAll();
-            }else {
+                try {
+                    mainController.signOutAll();
+                }catch (ConcurrentModificationException e){
+                    e.printStackTrace();
+                    Platform.exit();
+                }
                 Platform.exit();
+            }else{
+                event.consume();
             }
         });
         setUserAgentStylesheet(STYLESHEET_CASPIAN);
@@ -59,5 +70,9 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static String getVersion(){
+        return VERSION;
     }
 }

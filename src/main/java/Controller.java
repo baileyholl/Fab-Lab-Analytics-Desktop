@@ -3,6 +3,7 @@ import data.Person;
 import data.PersonModel;
 import data.Timestamp;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -61,6 +62,12 @@ public class Controller implements Initializable {
     TableColumn<Person, String> DshopCertColumn;
     @FXML
     TableColumn<Person, String> CshopCertColumn;
+    @FXML
+    TableColumn<Person, String> CWaiverColumn;
+    @FXML
+    TableColumn<Person, String> DWaiverColumn;
+
+
     @FXML
     Button signInButton;
     @FXML
@@ -131,10 +138,14 @@ public class Controller implements Initializable {
         DlabCertColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
         CshopCertColumn.setCellValueFactory(new PropertyValueFactory<>("shopCertification"));
         DshopCertColumn.setCellValueFactory(new PropertyValueFactory<>("shopCertification"));
+        DWaiverColumn.setCellValueFactory(new PropertyValueFactory<>("signedWaiver"));
+        CWaiverColumn.setCellValueFactory(new PropertyValueFactory<>("signedWaiver"));
         DEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         DNotesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
         DStrikesColumn.setCellValueFactory(new PropertyValueFactory<>("strikes"));
         DVisitColumn.setCellValueFactory(new PropertyValueFactory<>("timesVisited"));
+
+        setupCellFactories();
         signInButton.setOnAction(event -> handleSwipe(false));
         idField.setOnAction(event -> handleSwipe(false));
 
@@ -154,6 +165,53 @@ public class Controller implements Initializable {
         aboutButton.setOnAction(event -> WebUtil.openWebpage(Constants.aboutLink));
         logTextArea.setText(Constants.logContents);
         Platform.runLater(() -> idField.requestFocus());
+    }
+
+    private void setupCellFactories() {
+        DshopCertColumn.setCellFactory(column -> new TableCell<Person, String>() {
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if(item == null || empty){
+                    setText(null);
+                    setStyle("");
+                }else {
+                    setText(getString());
+                    if (getString().toLowerCase().equals("red")) {
+                        setStyle("-fx-background-color: #C14242");
+                    } else if (getString().toLowerCase().equals("yellow")) {
+                        setStyle("-fx-background-color: #E8E868");
+                    } else if (getString().toLowerCase().equals("green")) {
+                        setStyle("-fx-background-color: #4BE64B");
+                    }else{
+                        setStyle("");
+                    }
+                }
+            }
+            private String getString() {
+                return getItem() == null ? "" : getItem();
+            }
+        });
+        DWaiverColumn.setCellFactory(column -> new TableCell<Person, String>() {
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if(item == null || empty){
+                    setText(null);
+                    setStyle("");
+                }else {
+                    setText(getString());
+                    if (getString().toLowerCase().equals("no")) {
+                        setStyle("-fx-text-fill: #C14242");
+                    }
+                }
+            }
+            private String getString() {
+                return getItem() == null ? "" : getItem();
+            }
+        });
+        CWaiverColumn.setCellFactory(DWaiverColumn.getCellFactory());
+        CshopCertColumn.setCellFactory(DshopCertColumn.getCellFactory());
+        CCertificationsColumn.setCellFactory(DshopCertColumn.getCellFactory());
+        DCertificationsColumn.setCellFactory(DshopCertColumn.getCellFactory());
     }
 
     private void focusSearch() {
@@ -244,7 +302,10 @@ public class Controller implements Initializable {
     }
 
     public void signOutAll(){
-        for(Person p : checkInModel.getObservableList()){
+        //Stop concurrent modifications
+        List<Person> list = new ArrayList<>();
+        list.addAll(checkInModel.getObservableList());
+        for (Person p :list) {
             signOut(p, false);
         }
     }
