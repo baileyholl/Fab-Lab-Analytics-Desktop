@@ -1,2 +1,2 @@
 # Fab-Lab-Analytics-Desktop
-Sign in System and Data Analysis for the University of Oklahoma Fabrication Lab.
+Sign in System and Data Analytics Tool for the University of Oklahoma Innovation Hub.
