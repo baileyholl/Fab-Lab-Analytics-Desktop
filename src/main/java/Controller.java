@@ -47,6 +47,8 @@ public class Controller implements Initializable {
     @FXML
     TableColumn<Person, String> DEmailColumn;
     @FXML
+    TableColumn<Person, String> CEmailColumn;
+    @FXML
     TableColumn<Person, String> DCertificationsColumn;
     @FXML
     TableColumn<Person, String> DNotesColumn;
@@ -99,6 +101,12 @@ public class Controller implements Initializable {
     @FXML
     MenuItem aboutButton;
     @FXML
+    RadioMenuItem generalLayout;
+    @FXML
+    RadioMenuItem fablabLayout;
+    @FXML
+    RadioMenuItem visCodelabLayout;
+    @FXML
     TextArea logTextArea;
 
     private Person selectedPerson;
@@ -126,6 +134,7 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         CIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         CNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        CEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         CCertificationsColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
         CTimestampColumn.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
         CNotesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
@@ -148,15 +157,12 @@ public class Controller implements Initializable {
         setupCellFactories();
         signInButton.setOnAction(event -> handleSwipe(false));
         idField.setOnAction(event -> handleSwipe(false));
-
         searchField.setOnKeyTyped(event -> focusSearch());
         openFolderMenuButton.setOnAction(event -> FileManager.openFolderExplorer());
         addMenuItem.setOnAction(event -> openAddWindow("", false));
         editMenuItem.setOnAction(event-> editSelected());
         deleteMenuItem.setOnAction(event -> deleteSelected());
         forceSignInOutMenuItem.setOnAction(event -> forceSignInOut());
-        //directoryTab.setOnSelectionChanged(event -> refocusIdField(true));
-        //checkedInTab.setOnSelectionChanged(event -> refocusIdField(true));
         logTab.setOnSelectionChanged(event -> {
             Platform.runLater(()->logTextArea.setScrollTop(Double.MAX_VALUE));
             refocusIdField(true);
@@ -164,6 +170,18 @@ public class Controller implements Initializable {
         exportToCSV.setOnAction(event ->  FileManager.getDirectoryAsCSV(directoryModel.getObservableList()));
         aboutButton.setOnAction(event -> WebUtil.openWebpage(Constants.aboutLink));
         logTextArea.setText(Constants.logContents);
+
+        ToggleGroup layoutGroup = new ToggleGroup();
+        generalLayout.setToggleGroup(layoutGroup);
+        fablabLayout.setToggleGroup(layoutGroup);
+        visCodelabLayout.setToggleGroup(layoutGroup);
+        fablabLayout.setSelected(true);
+
+        generalLayout.setOnAction(this::changeLayout);
+        fablabLayout.setOnAction(this::changeLayout);
+        visCodelabLayout.setOnAction(this::changeLayout);
+        CIDColumn.setVisible(false);
+        DIDColumn.setVisible(false);
         Platform.runLater(() -> idField.requestFocus());
     }
 
@@ -313,7 +331,7 @@ public class Controller implements Initializable {
     private Person getSelectedPerson(){
         TableView<Person> tableView = getFocusedTableView();
         Person person = null;
-        if(tableView != null) {
+        if(tableView != null && tableView.getItems().size() > 0) {
             person = tableView.getItems().get(tableView.getSelectionModel().getFocusedIndex());
         }
         return person;
@@ -345,5 +363,41 @@ public class Controller implements Initializable {
 
     private void updateLogDisplay(){
         logTextArea.setText(Constants.logContents);
+    }
+
+    private void changeLayout(Event event){
+        //Default to codelab settings - all true
+        boolean strikes = true;
+        boolean certs = true; //Whole certs tab
+        boolean timestamp = true;
+        boolean notes = true;
+        boolean visits = true;
+        boolean labCert = true;
+        boolean shopCert = true;
+        if(event.getSource().equals(generalLayout)){
+            strikes = false;
+            certs = false;
+            timestamp = false;
+            notes = false;
+            visits = false;
+            labCert = false;
+            shopCert = false;
+        }else if(event.getSource().equals(visCodelabLayout)){
+            labCert = false;
+            shopCert = false;
+        }
+        DCertificationsColumn.setVisible(certs);
+        CCertificationsColumn.setVisible(certs);
+        DStrikesColumn.setVisible(strikes);
+        CStrikesColumn.setVisible(strikes);
+        CTimestampColumn.setVisible(timestamp);
+        DNotesColumn.setVisible(notes);
+        CNotesColumn.setVisible(notes);
+        CVisitColumn.setVisible(visits);
+        DVisitColumn.setVisible(visits);
+        ClabCertColumn.setVisible(labCert);
+        DlabCertColumn.setVisible(labCert);
+        DshopCertColumn.setVisible(shopCert);
+        CshopCertColumn.setVisible(shopCert);
     }
 }

@@ -14,8 +14,8 @@ import java.util.ConcurrentModificationException;
 import java.util.Timer;
 
 public class Main extends Application {
-
-    public static final String VERSION = "1.3.2";
+    //Must be updated at each release iteration.
+    public static final String VERSION = "1.4.1";
 
 
     @Override
@@ -39,7 +39,6 @@ public class Main extends Application {
         addController.setupStage();
         mainController.initControllers(addController);
         addController.initParentController(mainController);
-        //Parent root = FXMLLoader.load(getClass().getResource("/signin.fxml"));
         primaryStage.setTitle("Fab Lab Analytics "  + getVersion());
         primaryStage.setScene(new Scene(root, 1060  , 650));
         primaryStage.setOnCloseRequest(event -> {
@@ -72,6 +71,10 @@ public class Main extends Application {
         launch(args);
     }
 
+    /**
+     * DO NOT CHANGE SIGNATURE. USED BY FLA UPDATER BY REFLECTION
+     * @return Returns version of this jar.
+     */
     public static String getVersion(){
         return VERSION;
     }

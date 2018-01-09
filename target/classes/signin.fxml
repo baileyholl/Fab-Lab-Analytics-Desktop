@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -29,9 +30,16 @@
                   <MenuItem fx:id="addMenuItem" mnemonicParsing="false" text="Add " />
                   <MenuItem fx:id="editMenuItem" mnemonicParsing="false" text="Edit" />
               <MenuItem fx:id="deleteMenuItem" mnemonicParsing="false" text="Delete" />
-                  <MenuItem fx:id="conversionButton" disable="true" mnemonicParsing="false" text="Conversion(Dont touch)" />
+                  <MenuItem fx:id="conversionButton" disable="true" mnemonicParsing="false" text="Debug" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Layout">
+              <items>
+                  <RadioMenuItem fx:id="fablabLayout" mnemonicParsing="false" text="Fabrication Lab" />
+                  <RadioMenuItem fx:id="generalLayout" mnemonicParsing="false" text="General" />
+                  <RadioMenuItem fx:id="visCodelabLayout" mnemonicParsing="false" text="Vis/Codelab" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
               <MenuItem fx:id="aboutButton" mnemonicParsing="false" text="About" />
@@ -49,6 +57,7 @@
                           <columns>
                             <TableColumn fx:id="CIDColumn" prefWidth="126.0" text="ID" />
                             <TableColumn fx:id="CNameColumn" prefWidth="195.0" text="Name" />
+                              <TableColumn fx:id="CEmailColumn" prefWidth="75.0" text="Email" />
                               <TableColumn fx:id="CTimestampColumn" prefWidth="141.0" text="Timestamp" />
                               <TableColumn fx:id="CCertificationsColumn" prefWidth="219.0" text="Certifications">
                                  <columns>

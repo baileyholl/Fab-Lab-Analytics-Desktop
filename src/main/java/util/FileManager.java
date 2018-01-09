@@ -35,12 +35,35 @@ public final class FileManager {
         Constants.directoryFolder = new File(Constants.mainFolder.toString() + OSDirectoryPath);
         Constants.logFolder = new File(Constants.mainFolder.toString() + OSLogPath);
         Constants.analyticsFolder = new File(Constants.mainFolder.toString() + OSAnalyticsPath);
-        if (!(Constants.mainFolder.exists() && Constants.directoryFolder.exists() && Constants.logFolder.exists() && Constants.analyticsFolder.exists())) {
-            if (!(Constants.mainFolder.mkdir() && Constants.directoryFolder.mkdir() && Constants.logFolder.mkdir() && Constants.analyticsFolder.mkdir())) {
-                System.out.println("FAILED MAKING PROPER DIRECTORIES.");
+        if(!Constants.mainFolder.exists()) {
+            System.out.println("Making main folder");
+            if(!Constants.mainFolder.mkdir()){
+                System.out.println("Failed creating main folder");
+                System.exit(1);
             }
-            System.out.println("Created missing files.");
         }
+        if(!Constants.directoryFolder.exists()) {
+            System.out.println("Making directory folder");
+            if(!Constants.directoryFolder.mkdir()){
+                System.out.println("Failed making directory folder");
+                System.exit(1);
+            }
+        }
+        if(!Constants.logFolder.exists()) {
+            System.out.println("Making log folder");
+            if(!Constants.logFolder.mkdir()){
+                System.out.println("Failed making log folder");
+                System.exit(1);
+            }
+        }
+        if(!Constants.analyticsFolder.exists()) {
+            System.out.println("Making analytics folder");
+            if(!Constants.analyticsFolder.mkdir()){
+                System.out.println("Failed making analytics folder");
+                System.exit(1);
+            }
+        }
+
         List<File> list;
         if(Constants.directoryFolder.listFiles() == null) {
             list = Arrays.asList(new File[0]);
@@ -76,31 +99,28 @@ public final class FileManager {
 
 
     private static String getFilePath(){
-        String FileFolder = System.getenv("APPDATA") + "\\" + "FabLabAnalytics";
+        /**
+        String FileFolder = System.getenv("APPDATA") + File.separator + "FabLabAnalytics";
         System.out.println("Searching for system");
         String os = System.getProperty("os.name").toUpperCase();
         if (os.contains("WIN")) {
             FileFolder = System.getenv("APPDATA") + "\\" + "FabLabAnalytics";
-            OSDirectoryPath = ("\\directory");
-            OSLogPath = ("\\log");
-            OSAnalyticsPath = "\\analytics";
             System.out.println("Found windows");
         }
         if (os.contains("MAC")) {
             FileFolder = System.getProperty("user.home") + "/Library/Application Support" + "/FabLabAnalytics";
-            OSDirectoryPath = ("/directory");
-            OSLogPath = ("/log");
-            OSAnalyticsPath = "/analytics";
             System.out.println("Found mac");
         }
         if (os.contains("NUX")) {
             FileFolder = System.getProperty("user.dir") + ".FabLabAnalytics";
-            OSDirectoryPath = (".directory");
-            OSLogPath = (".log");
-            OSAnalyticsPath = ".analytics";
             System.out.println("Found linux");
         }
+         **/
+        String FileFolder = new File(".").getAbsolutePath() + File.separator + "FabLabAnalytics";
         System.out.println(FileFolder);
+        OSDirectoryPath = File.separator + "directory";
+        OSLogPath = File.separator + "log";
+        OSAnalyticsPath = File.separator + "analytics";
         return FileFolder;
     }
 

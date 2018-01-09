@@ -1,6 +1,9 @@
 import java.util.Date;
 import java.util.TimerTask;
 
+/**
+ * Template timer task for sending data to a server
+ */
 public class APIBackgroundService extends TimerTask{
 
 
