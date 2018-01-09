@@ -3,6 +3,9 @@ package security;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Used to securely store student ID numbers
+ */
 public class SecureString {
     /*The string contents AFTER hashing the input string*/
     private String contents;

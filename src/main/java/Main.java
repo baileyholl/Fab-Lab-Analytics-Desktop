@@ -14,9 +14,9 @@ import java.util.ConcurrentModificationException;
 import java.util.Timer;
 
 public class Main extends Application {
+
     //Must be updated at each release iteration.
     public static final String VERSION = "1.4.1";
-
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -39,7 +39,7 @@ public class Main extends Application {
         addController.setupStage();
         mainController.initControllers(addController);
         addController.initParentController(mainController);
-        primaryStage.setTitle("Fab Lab Analytics "  + getVersion());
+        primaryStage.setTitle("Innovation Hub Analytics "  + getVersion());
         primaryStage.setScene(new Scene(root, 1060  , 650));
         primaryStage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Would you like to sign out all users?", ButtonType.YES, ButtonType.NO);
