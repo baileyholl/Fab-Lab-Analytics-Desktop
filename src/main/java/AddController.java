@@ -99,6 +99,7 @@ public class AddController implements Initializable {
     public void open(String idValue, Person selectedPerson, boolean editMode){
         this.selectedPerson = selectedPerson;
         inputField.setText(idValue);
+        if(idValue.length() == 17) idNumberField.setText(idValue.substring(6, 15)); //Parse card swipe junk to real ID number
         strikesField.setText("0");
         this.isEditMode = editMode;
         if(selectedPerson != null && isEditMode){
@@ -137,7 +138,7 @@ public class AddController implements Initializable {
     public void setupStage(){
         stage = new Stage();
         stage.setTitle("Add New User");
-        stage.setScene(new Scene(root,310  , 436));
+        stage.setScene(new Scene(root,300  , 400));
         stage.setResizable(false);
         stage.setOnCloseRequest(event -> close());
     }

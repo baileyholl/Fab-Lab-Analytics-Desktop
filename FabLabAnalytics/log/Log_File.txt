@@ -1,0 +1,4 @@
+[01-10-2018 12:04 PM] asdf was signed in with ID: asdf
+[01-10-2018 12:04 PM] asdf was added to the directory and signed in with ID: asdf
+[01-10-2018 12:04 PM] asdf was signed out(MANUAL) with ID: asdf
+

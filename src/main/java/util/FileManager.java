@@ -3,6 +3,7 @@ package util;
 import com.google.gson.Gson;
 import data.Constants;
 import data.Person;
+import data.Timestamp;
 import javafx.scene.control.Alert;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -99,23 +100,6 @@ public final class FileManager {
 
 
     private static String getFilePath(){
-        /**
-        String FileFolder = System.getenv("APPDATA") + File.separator + "FabLabAnalytics";
-        System.out.println("Searching for system");
-        String os = System.getProperty("os.name").toUpperCase();
-        if (os.contains("WIN")) {
-            FileFolder = System.getenv("APPDATA") + "\\" + "FabLabAnalytics";
-            System.out.println("Found windows");
-        }
-        if (os.contains("MAC")) {
-            FileFolder = System.getProperty("user.home") + "/Library/Application Support" + "/FabLabAnalytics";
-            System.out.println("Found mac");
-        }
-        if (os.contains("NUX")) {
-            FileFolder = System.getProperty("user.dir") + ".FabLabAnalytics";
-            System.out.println("Found linux");
-        }
-         **/
         String FileFolder = new File(".").getAbsolutePath() + File.separator + "FabLabAnalytics";
         System.out.println(FileFolder);
         OSDirectoryPath = File.separator + "directory";
@@ -168,12 +152,12 @@ public final class FileManager {
         }
     }
 
-    public static void getDirectoryAsCSV(Collection<Person> collection){
-        String CSVContents = "Timestamp data gathered starting September 17th 2017. \n";
-        CSVContents += "Total Time Collected:" + "," +  AnalyticUtil.getTotalTimeSpentInText(collection) + "," +
-                "Total Number of People: " +  collection.size() + "," +"Average Time Per Person: " + "," + AnalyticUtil.getAverageTimeSpent(collection) + "\n";
+    public static void getDirectoryAsCSV(Collection<Person> collection, Collection<Timestamp> dataQueries){
+        String CSVContents = "Aggregate data gathered from 9-17-17 to " + Timestamp.getCurrentTime()+ "\n";
+        CSVContents += "Total Time Collected:" + AnalyticUtil.getTotalTimeSpentInText(collection) + "," +
+                "Total Number of People: " +  collection.size() + "," +"Average Time Per Person: " +  AnalyticUtil.getAverageTimeSpent(collection) + "\n";
         CSVContents += "Total Number of Visits: " + AnalyticUtil.getVisitCount(collection) + "," +"Average Time Per Visit: " + AnalyticUtil.getAverageTimePerVisit(collection)+ "," +
-                "Average Time Per Person: " + "," + AnalyticUtil.getAverageTimeSpent(collection) + "\n";
+                "Average Time Per Person: " + AnalyticUtil.getAverageTimeSpent(collection) + "\n";
         String visitorHeaders = "Card Input, ID, Name, Email, Certifications, Shop Certification, Strikes, Notes, Visit Count" + "\n";
         CSVContents += visitorHeaders;
         StringBuilder CSVContentsBuilder = new StringBuilder(CSVContents);

@@ -21,7 +21,8 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem id="openFolderMenuButton" fx:id="openFolderMenuButton" mnemonicParsing="false" text="Open Folder" />
-                  <MenuItem fx:id="exportToCSV" mnemonicParsing="false" text="Export to CSV" />
+                  <MenuItem fx:id="exportToCSV" mnemonicParsing="false" text="Export Directory" />
+                  <MenuItem fx:id="exportAnalytics" mnemonicParsing="false" text="Export Analytics" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">

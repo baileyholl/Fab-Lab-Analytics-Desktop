@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import security.SecureString;
 import util.FileManager;
 
 import java.util.ConcurrentModificationException;
@@ -58,9 +59,6 @@ public class Main extends Application {
         });
         setUserAgentStylesheet(STYLESHEET_CASPIAN);
         primaryStage.show();
-        //APIBackgroundService apiBackgroundService = new APIBackgroundService();
-        //Timer timer = new Timer();
-        //timer.scheduleAtFixedRate(apiBackgroundService, 0, 10*1000);
     }
 
     private void setupFiles(){

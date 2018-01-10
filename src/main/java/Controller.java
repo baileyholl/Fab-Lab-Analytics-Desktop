@@ -3,7 +3,6 @@ import data.Person;
 import data.PersonModel;
 import data.Timestamp;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -101,6 +100,8 @@ public class Controller implements Initializable {
     @FXML
     MenuItem aboutButton;
     @FXML
+    MenuItem exportAnalytics;
+    @FXML
     RadioMenuItem generalLayout;
     @FXML
     RadioMenuItem fablabLayout;
@@ -167,7 +168,7 @@ public class Controller implements Initializable {
             Platform.runLater(()->logTextArea.setScrollTop(Double.MAX_VALUE));
             refocusIdField(true);
         });
-        exportToCSV.setOnAction(event ->  FileManager.getDirectoryAsCSV(directoryModel.getObservableList()));
+        exportToCSV.setOnAction(event ->  FileManager.getDirectoryAsCSV(directoryModel.getObservableList(), null));
         aboutButton.setOnAction(event -> WebUtil.openWebpage(Constants.aboutLink));
         logTextArea.setText(Constants.logContents);
 
@@ -321,8 +322,7 @@ public class Controller implements Initializable {
 
     public void signOutAll(){
         //Stop concurrent modifications
-        List<Person> list = new ArrayList<>();
-        list.addAll(checkInModel.getObservableList());
+        List<Person> list = new ArrayList<>(checkInModel.getObservableList());
         for (Person p :list) {
             signOut(p, false);
         }
