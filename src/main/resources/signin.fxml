@@ -14,14 +14,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1060.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1060.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainController">
    <children>
       <MenuBar prefHeight="24.0" prefWidth="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem id="openFolderMenuButton" fx:id="openFolderMenuButton" mnemonicParsing="false" text="Open Folder" />
-                  <MenuItem fx:id="exportToCSV" mnemonicParsing="false" text="Export Directory" />
+                  <MenuItem fx:id="exportDirectory" mnemonicParsing="false" text="Export Directory" />
                   <MenuItem fx:id="exportAnalytics" mnemonicParsing="false" text="Export Analytics" />
             </items>
           </Menu>

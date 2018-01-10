@@ -1,3 +1,4 @@
+package view;
 import data.Constants;
 import data.Person;
 import data.PersonModel;
@@ -15,11 +16,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import util.FileManager;
 import util.LogManager;
 import util.WebUtil;
+import view.AddController;
 
 import java.net.URL;
 import java.util.*;
 
-public class Controller implements Initializable {
+public class MainController implements Initializable {
 
     @FXML
     TableView<Person> CheckinTable;
@@ -96,7 +98,7 @@ public class Controller implements Initializable {
     @FXML
     MenuItem conversionButton;
     @FXML
-    MenuItem exportToCSV;
+    MenuItem exportDirectory;
     @FXML
     MenuItem aboutButton;
     @FXML
@@ -115,20 +117,21 @@ public class Controller implements Initializable {
     private PersonModel checkInModel;
     protected PersonModel directoryModel;
     private AddController addController;
+    private DatePickerController datePickerController;
 
     public void initModel(PersonModel checkInModel, PersonModel directoryModel){
         this.checkInModel = checkInModel;
         this.directoryModel = directoryModel;
         CheckinTable.setItems(checkInModel.getObservableList());
         DirectoryTable.setItems(directoryModel.getObservableList());
-
     }
 
-    public void initControllers(AddController controller){
-        if(addController != null){
+    public void initControllers(AddController addController, DatePickerController datePickerController){
+        if(this.addController != null || this.datePickerController != null){
             throw new IllegalStateException("Controllers already initialized");
         }
-        this.addController = controller;
+        this.addController = addController;
+        this.datePickerController = datePickerController;
     }
 
     @Override
@@ -168,7 +171,8 @@ public class Controller implements Initializable {
             Platform.runLater(()->logTextArea.setScrollTop(Double.MAX_VALUE));
             refocusIdField(true);
         });
-        exportToCSV.setOnAction(event ->  FileManager.getDirectoryAsCSV(directoryModel.getObservableList(), null));
+        exportDirectory.setOnAction(event ->  FileManager.getDirectoryAsCSV(directoryModel.getObservableList(), null));
+        exportAnalytics.setOnAction(event -> datePickerController.open());
         aboutButton.setOnAction(event -> WebUtil.openWebpage(Constants.aboutLink));
         logTextArea.setText(Constants.logContents);
 

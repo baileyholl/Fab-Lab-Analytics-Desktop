@@ -1,3 +1,5 @@
+package view;
+
 import data.Person;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import util.FileManager;
 import util.LogManager;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -41,12 +42,12 @@ public class AddController implements Initializable {
     private Stage stage;
     private Parent root;
     private Person selectedPerson;
-    private Controller parentController;
+    private MainController parentController;
     private boolean isEditMode;
 
-    public void initParentController(Controller controller){
-        if(parentController != null) throw new IllegalStateException("Parent Controller already initialized.");
-        this.parentController = controller;
+    public void initParentController(MainController mainController){
+        if(parentController != null) throw new IllegalStateException("Parent MainController already initialized.");
+        this.parentController = mainController;
     }
 
     @Override
@@ -77,7 +78,6 @@ public class AddController implements Initializable {
     }
 
     private void addPersonToDirectory() {
-
         Person person = new Person(inputField.getText(), idNumberField.getText(),nameField.getText(), emailField.getText(),
                 certsField.getText(), shopField.getText(), notesField.getText(), strikesField.getText(), getStringFromCheck(waiverBox));
         parentController.directoryModel.add(person);
@@ -137,7 +137,7 @@ public class AddController implements Initializable {
 
     public void setupStage(){
         stage = new Stage();
-        stage.setTitle("Add New User");
+        stage.setTitle(!isEditMode ? "Add New User" : "Edit User");
         stage.setScene(new Scene(root,300  , 400));
         stage.setResizable(false);
         stage.setOnCloseRequest(event -> close());

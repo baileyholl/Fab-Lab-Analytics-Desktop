@@ -8,11 +8,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-import security.SecureString;
 import util.FileManager;
+import view.AddController;
+import view.DatePickerController;
+import view.MainController;
 
 import java.util.ConcurrentModificationException;
-import java.util.Timer;
 
 public class Main extends Application {
 
@@ -29,7 +30,7 @@ public class Main extends Application {
         //Set up resources and model structure
         FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/signin.fxml"));
         Parent root = mainLoader.load();
-        Controller mainController = mainLoader.getController();
+        MainController mainController = mainLoader.getController();
         mainController.initModel(checkinModel, directoryModel);
 
         FXMLLoader addLoader = new FXMLLoader(getClass().getResource("/entry.fxml"));
@@ -38,8 +39,17 @@ public class Main extends Application {
         AddController addController = addLoader.getController();
         addController.setRoot(addRoot);
         addController.setupStage();
-        mainController.initControllers(addController);
         addController.initParentController(mainController);
+
+        FXMLLoader datePickerLoader = new FXMLLoader(getClass().getResource("/analytic_date_picker.fxml"));
+        Parent dpRoot = datePickerLoader.load();
+        DatePickerController datePickerController = datePickerLoader.getController();
+        datePickerController.setRoot(dpRoot);
+        datePickerController.setupStage();
+        datePickerController.initParentController(mainController);
+
+        mainController.initControllers(addController, datePickerController);
+
         primaryStage.setTitle("Innovation Hub Analytics "  + getVersion());
         primaryStage.setScene(new Scene(root, 1060  , 650));
         primaryStage.setOnCloseRequest(event -> {
