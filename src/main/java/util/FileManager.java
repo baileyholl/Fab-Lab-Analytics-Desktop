@@ -155,7 +155,7 @@ public final class FileManager {
     public static void getDirectoryAsCSV(Collection<Person> collection, Collection<Timestamp> dataQueries){
         String CSVContents = "Aggregate data gathered from 9-17-17 to " + Timestamp.getCurrentTime()+ "\n";
         CSVContents += "Total Time Collected:" + AnalyticUtil.getTotalTimeSpentInText(collection) + "," +
-                "Total Number of People: " +  collection.size() + "," +"Average Time Per Person: " +  AnalyticUtil.getAverageTimeSpent(collection) + "\n";
+                "Total Number of People: " +  collection.size() + "\n";
         CSVContents += "Total Number of Visits: " + AnalyticUtil.getVisitCount(collection) + "," +"Average Time Per Visit: " + AnalyticUtil.getAverageTimePerVisit(collection)+ "," +
                 "Average Time Per Person: " + AnalyticUtil.getAverageTimeSpent(collection) + "\n";
         String visitorHeaders = "Card Input, ID, Name, Email, Certifications, Shop Certification, Strikes, Notes, Visit Count" + "\n";

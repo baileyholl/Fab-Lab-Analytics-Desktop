@@ -204,6 +204,10 @@ public class Person{
         this.signedWaiver = p.signedWaiver;
     }
 
+    /**
+     * Need to regenerate after changes to Person class
+     * @return
+     */
     @Override
     public int hashCode() {
         int result = cardNumber != null ? cardNumber.hashCode() : 0;
@@ -221,6 +225,10 @@ public class Person{
         return result;
     }
 
+    /**
+     * Need to regenerate after changes to Person class
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

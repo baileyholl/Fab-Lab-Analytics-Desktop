@@ -136,6 +136,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //associates cells int he view with Person object attributes
         CIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         CNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         CEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -159,6 +160,7 @@ public class MainController implements Initializable {
         DVisitColumn.setCellValueFactory(new PropertyValueFactory<>("timesVisited"));
 
         setupCellFactories();
+        //link up button presses etc to actions
         signInButton.setOnAction(event -> handleSwipe(false));
         idField.setOnAction(event -> handleSwipe(false));
         searchField.setOnKeyTyped(event -> focusSearch());
@@ -199,6 +201,8 @@ public class MainController implements Initializable {
                     setStyle("");
                 }else {
                     setText(getString());
+                    //this is a testing thing right now
+                    //can change css for the cells and other stuff
                     if (getString().toLowerCase().equals("red")) {
                         setStyle("-fx-background-color: #C14242");
                     } else if (getString().toLowerCase().equals("yellow")) {
