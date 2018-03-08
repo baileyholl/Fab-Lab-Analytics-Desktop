@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1060.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1060.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainController">
    <children>
       <MenuBar prefHeight="24.0" prefWidth="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <menus>
@@ -28,6 +28,7 @@
           <Menu mnemonicParsing="false" text="Edit">
             <items>
                   <MenuItem fx:id="forceSignInOutMenuItem" mnemonicParsing="false" text="Manual Sign In/Out" />
+                  <MenuItem fx:id="addCertMenuItem" mnemonicParsing="false" text="Manage Certifications..." />
                   <MenuItem fx:id="addMenuItem" mnemonicParsing="false" text="Add " />
                   <MenuItem fx:id="editMenuItem" mnemonicParsing="false" text="Edit" />
               <MenuItem fx:id="deleteMenuItem" mnemonicParsing="false" text="Delete" />

@@ -12,13 +12,17 @@ import util.FileManager;
 import view.AddController;
 import view.DatePickerController;
 import view.MainController;
+import view.CertController;
+import awsapi.AWSTest;
+
+import data.Certification;
 
 import java.util.ConcurrentModificationException;
 
 public class Main extends Application {
 
     //Must be updated at each release iteration.
-    public static final String VERSION = "1.4.1";
+    private static final String VERSION = "1.4.2";
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -48,7 +52,14 @@ public class Main extends Application {
         datePickerController.setupStage();
         datePickerController.initParentController(mainController);
 
-        mainController.initControllers(addController, datePickerController);
+        FXMLLoader certLoader = new FXMLLoader(getClass().getResource("/certification.fxml"));
+        Parent cRoot = certLoader.load();
+        CertController certController = certLoader.getController();
+        certController.setRoot(cRoot);
+        certController.setupStage();
+        certController.initParentController(mainController);
+
+        mainController.initControllers(addController, datePickerController, certController);
 
         primaryStage.setTitle("Innovation Hub Analytics "  + getVersion());
         primaryStage.setScene(new Scene(root, 1060  , 650));
@@ -76,6 +87,14 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        /*
+        try {
+            AWSTest.tryAPI();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        */
+
         launch(args);
     }
 

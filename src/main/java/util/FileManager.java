@@ -77,7 +77,7 @@ public final class FileManager {
         setupLogger();
     }
 
-    public static void setupLogger(){
+    private static void setupLogger(){
         System.out.println("Seaching for log file");
         Path path = Paths.get(Constants.logFolder.toString(), "Log_File.txt");
         Constants.logFile = new File(path.toString());
@@ -124,7 +124,7 @@ public final class FileManager {
         }
     }
 
-    public static boolean deleteFile(Path path){
+    private static boolean deleteFile(Path path){
         try{
             if(path != null && path.toFile().exists()){
                 Files.delete(path);
@@ -158,11 +158,11 @@ public final class FileManager {
                 "Total Number of People: " +  collection.size() + "\n";
         CSVContents += "Total Number of Visits: " + AnalyticUtil.getVisitCount(collection) + "," +"Average Time Per Visit: " + AnalyticUtil.getAverageTimePerVisit(collection)+ "," +
                 "Average Time Per Person: " + AnalyticUtil.getAverageTimeSpent(collection) + "\n";
-        String visitorHeaders = "Card Input, ID, Name, Email, Certifications, Shop Certification, Strikes, Notes, Visit Count" + "\n";
+        String visitorHeaders = "ID, Name, Email, Certifications, Shop Certification, Strikes, Notes, Visit Count" + "\n";
         CSVContents += visitorHeaders;
         StringBuilder CSVContentsBuilder = new StringBuilder(CSVContents);
         for(Person p : collection){
-            String row = p.getCardNumber() + "," + p.getId() + "," +p.getName() + "," + p.getEmail() + "," + p.getCertifications() + "," + p.getShopCertification() +
+            String row = p.getId() + "," +p.getName() + "," + p.getEmail() + "," + p.getCertifications() +
                     "," + p.getStrikes() + "," + p.getNotes() + "," + p.getTimesVisited() + "\n";
             CSVContentsBuilder.append(row);
         }
@@ -197,8 +197,8 @@ public final class FileManager {
             if(person.getTimeStampHistory() == null){
                 person.setTimeStampHistory(new ArrayList<>());
             }
-            if(person.shopCertificationProperty() == null || person.getShopCertification() == null){
-                person.setShopCertification("");
+            if(person.getCertifications() == null || person.shopCertificationProperty() == null){
+                person.setCertifications(new ArrayList<>());
             }
             if(person.signedWaiverProperty() == null || person.getSignedWaiver() == null){
                 person.setSignedWaiver("No");

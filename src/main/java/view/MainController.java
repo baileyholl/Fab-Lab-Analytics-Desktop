@@ -13,10 +13,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import util.FileManager;
 import util.LogManager;
 import util.WebUtil;
-import view.AddController;
 
 import java.net.URL;
 import java.util.*;
@@ -96,6 +96,8 @@ public class MainController implements Initializable {
     @FXML
     MenuItem forceSignInOutMenuItem;
     @FXML
+    MenuItem addCertMenuItem;
+    @FXML
     MenuItem conversionButton;
     @FXML
     MenuItem exportDirectory;
@@ -118,6 +120,14 @@ public class MainController implements Initializable {
     protected PersonModel directoryModel;
     private AddController addController;
     private DatePickerController datePickerController;
+    private CertController certController;
+
+    public CertController getCertController() {
+        return certController;
+    }
+    public AddController getAddController() {
+        return addController;
+    }
 
     public void initModel(PersonModel checkInModel, PersonModel directoryModel){
         this.checkInModel = checkInModel;
@@ -126,12 +136,13 @@ public class MainController implements Initializable {
         DirectoryTable.setItems(directoryModel.getObservableList());
     }
 
-    public void initControllers(AddController addController, DatePickerController datePickerController){
-        if(this.addController != null || this.datePickerController != null){
+    public void initControllers(AddController addController, DatePickerController datePickerController, CertController certController){
+        if(this.addController != null || this.datePickerController != null || this.certController != null){
             throw new IllegalStateException("Controllers already initialized");
         }
         this.addController = addController;
         this.datePickerController = datePickerController;
+        this.certController = certController;
     }
 
     @Override
@@ -147,9 +158,9 @@ public class MainController implements Initializable {
         CVisitColumn.setCellValueFactory(new PropertyValueFactory<>("timesVisited"));
         DIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         DNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        DCertificationsColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
-        ClabCertColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
-        DlabCertColumn.setCellValueFactory(new PropertyValueFactory<>("certifications"));
+        DCertificationsColumn.setCellValueFactory(new PropertyValueFactory<>("labCertification"));
+        ClabCertColumn.setCellValueFactory(new PropertyValueFactory<>("labCertification"));
+        DlabCertColumn.setCellValueFactory(new PropertyValueFactory<>("labCertification"));
         CshopCertColumn.setCellValueFactory(new PropertyValueFactory<>("shopCertification"));
         DshopCertColumn.setCellValueFactory(new PropertyValueFactory<>("shopCertification"));
         DWaiverColumn.setCellValueFactory(new PropertyValueFactory<>("signedWaiver"));
@@ -169,6 +180,7 @@ public class MainController implements Initializable {
         editMenuItem.setOnAction(event-> editSelected());
         deleteMenuItem.setOnAction(event -> deleteSelected());
         forceSignInOutMenuItem.setOnAction(event -> forceSignInOut());
+        addCertMenuItem.setOnAction(event -> manageCerts());
         logTab.setOnSelectionChanged(event -> {
             Platform.runLater(()->logTextArea.setScrollTop(Double.MAX_VALUE));
             refocusIdField(true);
@@ -177,6 +189,8 @@ public class MainController implements Initializable {
         exportAnalytics.setOnAction(event -> datePickerController.open());
         aboutButton.setOnAction(event -> WebUtil.openWebpage(Constants.aboutLink));
         logTextArea.setText(Constants.logContents);
+
+        CheckinTable.setOnMouseClicked(event -> doubleClickCheck(event));
 
         ToggleGroup layoutGroup = new ToggleGroup();
         generalLayout.setToggleGroup(layoutGroup);
@@ -191,6 +205,14 @@ public class MainController implements Initializable {
         DIDColumn.setVisible(false);
         Platform.runLater(() -> idField.requestFocus());
     }
+
+    private void doubleClickCheck(MouseEvent event) {
+        if (event.getClickCount()==2){
+            //we got a right click
+            editSelected();
+        }
+    }
+
 
     private void setupCellFactories() {
         DshopCertColumn.setCellFactory(column -> new TableCell<Person, String>() {
@@ -275,7 +297,7 @@ public class MainController implements Initializable {
         if(tableView != null){
             int index = tableView.getSelectionModel().getFocusedIndex();
             selectedPerson = tableView.getItems().get(index);
-            openAddWindow(selectedPerson.getCardNumber(), true);
+            openAddWindow(selectedPerson.getId(), true);
         }
     }
 
@@ -289,24 +311,59 @@ public class MainController implements Initializable {
         return tableView;
     }
 
+
+    /**
+     * gets data from id field as it's populated by the card swipe
+     * @param wasForced used when Manual SignIn/Out is used
+     */
     private void handleSwipe(boolean wasForced){
         String cardInput = idField.getText();
-        Person directoryPerson = directoryModel.getByCardNumber(cardInput);
-        System.out.println(directoryPerson);
-        if(!directoryModel.contains(directoryPerson)){
-            openAddWindow(cardInput, false);
-            return;
-        }
-        if(!checkInModel.contains(directoryPerson)){
-            signIn(directoryPerson, wasForced);
+        try {
+            cardInput = parseSwipe(cardInput);
+            Person directoryPerson = directoryModel.getByID(cardInput);
+            System.out.println(directoryPerson);
+            if(!directoryModel.contains(directoryPerson)){
+                openAddWindow(cardInput, false);
+                return;
+            }
+            if(!checkInModel.contains(directoryPerson)){
+                signIn(directoryPerson, wasForced);
+                refocusIdField(true);
+                return;
+            }
+            signOut(directoryPerson, wasForced);
             refocusIdField(true);
-            return;
+        } catch (Exception e) {
+            //problem reading card (probably just a bad swipe)
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error reading card. Try putting a post it over the mag stripe and try again (sounds crazy but should work).");
+            idField.clear();
+            alert.showAndWait();
         }
-        signOut(directoryPerson, wasForced);
-        refocusIdField(true);
+
     }
 
-    public void signOut(Person p, boolean forced){
+    /**
+     * cleans input from card swipe, assumes an OU student ID is being swiped
+     * @param input String from input feild
+     * @return just the student ID number
+     * @throws Exception if there was a an error reading the card, should eb handled by handleSwipe
+     */
+    private String parseSwipe(String input) throws Exception{
+        if(input.charAt(0)==';'){
+            if(input.charAt(1)!='E'){
+                input = input.substring(6,15);
+                return input;
+            }
+            //error reading card
+            throw new Exception();
+        }
+        //if the input doesn't have the semicolon
+        //then it's not a swipe, it's a user input
+        return input;
+
+    }
+
+    private void signOut(Person p, boolean forced){
         if(!p.getTimeStampHistory().isEmpty()) p.getTimeStampHistory().get(p.getTimeStampHistory().size() - 1).setEnd(Timestamp.getCurrentTime());
         FileManager.saveDirectoryJsonFile(p);
         checkInModel.remove(p);
@@ -345,11 +402,25 @@ public class MainController implements Initializable {
         return person;
     }
 
+    /**
+     * Called when user click the "Manage Certifications" button in the "Edit" menu
+     * Brings up dialog to add cert
+     */
+    private void manageCerts() {
+        selectedPerson = getSelectedPerson();
+        if (selectedPerson == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Please select a person to edit certifications for.");
+            alert.show();
+        } else {
+            certController.open(selectedPerson);
+        }
+    }
+
     private void forceSignInOut() {
         TableView<Person> tableView = getFocusedTableView();
         if(tableView != null) {
             Person person = tableView.getItems().get(tableView.getSelectionModel().getFocusedIndex());
-            idField.setText(person.getCardNumber());
+            idField.setText(person.getId());
             handleSwipe(true);
         }
     }
@@ -358,9 +429,11 @@ public class MainController implements Initializable {
         updateLogDisplay();
         if(runLater){
             Platform.runLater(()-> idField.requestFocus());
+            idField.clear();
             return;
         }
         idField.requestFocus();
+        idField.clear();
     }
 
     public void invalidateViews(){

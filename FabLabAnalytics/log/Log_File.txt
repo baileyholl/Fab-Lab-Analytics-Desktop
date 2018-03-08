@@ -1,4 +1,159 @@
-[01-10-2018 12:04 PM] asdf was signed in with ID: asdf
-[01-10-2018 12:04 PM] asdf was added to the directory and signed in with ID: asdf
-[01-10-2018 12:04 PM] asdf was signed out(MANUAL) with ID: asdf
+[02-28-2018 01:12 PM] Big Dude was signed in with ID: 1001
+[02-28-2018 01:12 PM] Big Dude with ID: 1001 had their Certifications updated
+[02-28-2018 01:12 PM] Big Dude with ID: 1001 had their Certifications updated
+[02-28-2018 01:12 PM] Big Dude was signed out(MANUAL) with ID: 1001
+
+[02-28-2018 01:13 PM] Big Dude with ID: 1001 had their Certifications updated
+
+[02-28-2018 02:21 PM] Sam was signed in with ID: 111
+[02-28-2018 02:21 PM] Sam was added to the directory and signed in with ID: 111
+[02-28-2018 02:21 PM] Sam with ID: 111 had their Certifications updated
+
+[02-28-2018 02:24 PM] Sam was signed in with ID: 111
+
+[02-28-2018 02:27 PM] Sam was signed in with ID: 111
+[02-28-2018 02:30 PM] Sam with ID: 111 had their Certifications updated
+
+[02-28-2018 02:31 PM] Sam was signed in with ID: 111
+[02-28-2018 02:32 PM] Sam with ID: 111 had their Certifications updated
+[02-28-2018 02:32 PM] Sam was signed out with ID: 111
+
+[02-28-2018 02:35 PM] Sam was signed in with ID: 111
+[02-28-2018 02:36 PM] Sam with ID: 111 had their Certifications updated
+[02-28-2018 02:36 PM] Sam was signed out with ID: 111
+
+[02-28-2018 02:45 PM] Sam was signed in with ID: 111
+[02-28-2018 03:01 PM] Sam with ID: 111 had their Certifications updated
+[02-28-2018 03:01 PM] Sam was signed out with ID: 111
+
+[03-01-2018 02:01 PM] Sam was signed in with ID: 111
+
+[03-01-2018 02:02 PM] Sam was signed in with ID: 111
+
+[03-01-2018 02:05 PM] Sam was signed in with ID: 111
+
+[03-01-2018 02:10 PM] Sam was signed in with ID: 111
+[03-01-2018 02:11 PM] Sam with ID: 111 had their Certifications updated
+[03-01-2018 02:11 PM] Sam was signed out(MANUAL) with ID: 111
+[03-01-2018 02:11 PM] Sam was signed in with ID: 111
+
+[03-01-2018 02:17 PM] Sam was signed in with ID: 111
+[03-01-2018 02:17 PM] Sam was signed out with ID: 111
+
+[03-01-2018 02:20 PM] Sam was signed in with ID: 111
+[03-01-2018 02:20 PM] Sam was added to the directory and signed in with ID: 111
+[03-01-2018 02:21 PM] Sam with ID: 111 had their Certifications updated
+
+[03-05-2018 09:40 AM] Sam was signed in with ID: 111
+[03-05-2018 09:40 AM] Sam with ID: 111 had their Certifications updated
+[03-05-2018 09:41 AM] Sam was signed out with ID: 111
+
+[03-05-2018 10:14 AM] Sam was signed in with ID: 111
+
+[03-05-2018 10:15 AM] Sam was signed in with ID: 111
+
+[03-05-2018 10:22 AM] Sam was signed in with ID: 111
+
+[03-05-2018 10:24 AM] Sam was signed in with ID: 111
+
+[03-05-2018 10:32 AM] Sam was signed in with ID: 111
+
+[03-05-2018 10:37 AM] Sam was signed in with ID: 111
+
+[03-05-2018 10:52 AM] Sam was signed in with ID: 111
+[03-05-2018 10:52 AM] Sam with ID: 111 had their Certifications updated
+[03-05-2018 10:52 AM] Sam with ID: 111 was deleted from the directory.
+[03-05-2018 10:52 AM] Sam was signed in with ID: 111
+[03-05-2018 10:52 AM] Sam was added to the directory and signed in with ID: 111
+
+[03-05-2018 11:09 AM] Sam was signed in with ID: 111
+[03-05-2018 11:10 AM] Sam with ID: 111 had their Certifications updated
+[03-05-2018 11:11 AM] Sam with ID: 111 had their Certifications updated
+
+[03-05-2018 11:21 AM] Sam was signed in with ID: 111
+
+[03-05-2018 11:29 AM] Sam was signed in with ID: 111
+[03-05-2018 11:36 AM] Sam with ID: 111 had their Certifications updated
+[03-05-2018 11:36 AM] Sam with ID: 111 had their Certifications updated
+[03-05-2018 11:36 AM] Sam was signed out with ID: 111
+
+[03-05-2018 11:51 AM] Sam was signed in with ID: 111
+[03-05-2018 11:51 AM] Sam with ID: 111 had their Certifications updated
+
+[03-05-2018 11:52 AM] Sam was signed in with ID: 111
+
+[03-05-2018 11:56 AM] Sam was signed in with ID: 111
+
+[03-05-2018 12:21 PM] Sam was signed in with ID: 111
+
+[03-05-2018 12:40 PM] Sam was signed in with ID: 111
+
+[03-05-2018 12:50 PM] Sam was signed in with ID: 111
+[03-05-2018 12:51 PM] Sam with ID: 111 had their Certifications updated
+[03-05-2018 12:51 PM] Sam with ID: 111 had their Certifications updated
+[03-05-2018 12:51 PM] Sam with ID: 111 was edited.
+[03-05-2018 01:19 PM] Sam was signed out with ID: 111
+
+[03-05-2018 01:19 PM] Sam was signed in with ID: 111
+[03-05-2018 01:19 PM] Sam with ID: 111 had their Certifications updated
+[03-05-2018 01:19 PM] Sam with ID: 111 was edited.
+[03-05-2018 01:25 PM] Sam with ID: 111 had their Certifications updated
+
+[03-05-2018 01:48 PM] Sam was signed in with ID: 111
+[03-05-2018 01:48 PM] Sam with ID: 111 had their Certifications updated
+[03-05-2018 01:48 PM] Sam with ID: 111 was edited.
+[03-05-2018 01:49 PM] Sam was signed out with ID: 111
+
+[03-06-2018 01:29 PM] Sam was signed in with ID: 111
+[03-06-2018 01:29 PM] Sam was added to the directory and signed in with ID: 111
+
+[03-06-2018 01:37 PM] Sam was signed in with ID: 111
+[03-06-2018 01:37 PM] Sam was added to the directory and signed in with ID: 111
+
+[03-06-2018 01:41 PM] Sam was signed in with ID: 111
+[03-06-2018 01:41 PM] Sam was added to the directory and signed in with ID: 111
+[03-06-2018 01:41 PM] Sam was signed out with ID: 111
+
+[03-06-2018 01:45 PM] jekjd was signed in with ID: 1
+[03-06-2018 01:45 PM] jekjd was added to the directory and signed in with ID: 1
+[03-06-2018 01:45 PM] jekjd with ID: 1 was deleted from the directory.
+
+[03-06-2018 01:49 PM] Dude with ID: 1 had their Certifications updated
+[03-06-2018 01:49 PM] Dude was signed in with ID: 1
+[03-06-2018 01:49 PM] Dude was added to the directory and signed in with ID: 1
+[03-06-2018 01:50 PM] Sam was signed in with ID: 111
+[03-06-2018 01:50 PM] Sam with ID: 111 had their Certifications updated
+[03-06-2018 01:50 PM] Sam with ID: 111 was edited.
+[03-06-2018 01:50 PM] Dude was signed out(MANUAL) with ID: 1
+[03-06-2018 01:50 PM] Sam was signed out(MANUAL) with ID: 111
+
+[03-07-2018 01:13 PM] Sam was signed in with ID: 111
+
+[03-07-2018 01:14 PM] Sam was signed in with ID: 111
+[03-07-2018 01:18 PM] Sam with ID: 111 had their Certifications updated
+
+[03-07-2018 02:36 PM] Sam was signed in with ID: 111
+[03-07-2018 02:37 PM] Sam with ID: 111 had their Certifications updated
+[03-07-2018 02:37 PM] Sam was signed out with ID: 111
+
+[03-07-2018 02:38 PM] Sam was signed in with ID: 111
+[03-07-2018 02:38 PM] Sam with ID: 111 had their Certifications updated
+[03-07-2018 02:38 PM] Sam was signed out with ID: 111
+
+[03-08-2018 02:01 PM] 113428314 with ID: Alexia Walton was edited.
+[03-08-2018 02:01 PM] 134645435737 with ID: 12235345345 was edited.
+
+[03-08-2018 02:12 PM] Aldyn Lieberman was signed in(MANUAL) with ID: 113309981
+[03-08-2018 02:13 PM] Adella Kuster was signed in(MANUAL) with ID: 113327095
+[03-08-2018 02:13 PM] Aaron Condreay was signed in(MANUAL) with ID: 112870970
+[03-08-2018 02:13 PM] Adam DeLaney was signed in(MANUAL) with ID: 113304388
+[03-08-2018 02:13 PM] Adam DeLaney with ID: 113304388 was edited.
+[03-08-2018 02:13 PM] Aldyn Lieberman was signed out with ID: 113309981
+[03-08-2018 02:13 PM] Adella Kuster was signed out with ID: 113327095
+[03-08-2018 02:13 PM] Aaron Condreay was signed out with ID: 112870970
+[03-08-2018 02:13 PM] Adam DeLaney was signed out with ID: 113304388
+
+[03-08-2018 02:16 PM] Sam was signed in with ID: 111
+
+[03-08-2018 02:17 PM] Sam was signed in with ID: 111
 

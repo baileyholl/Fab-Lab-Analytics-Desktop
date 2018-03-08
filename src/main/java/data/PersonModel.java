@@ -27,8 +27,7 @@ public class PersonModel {
                 param.shopCertificationProperty(),
                 param.strikesProperty(),
                 param.timesVisitedProperty(),
-                param.certificationsProperty(),
-                param.cardNumberProperty(),
+                param.labCertificationProperty(),
                 param.emailProperty(),
                 param.notesProperty(),
                 param.signedWaiverProperty()
@@ -40,8 +39,8 @@ public class PersonModel {
         return this.observablePersonList.add(p);
     }
 
-    public Person getByCardNumber(String key){
-        return observablePersonList.stream().filter(p -> p.getCardNumber().equals(key)).findFirst().orElse(null);
+    public Person getByID(String key){
+        return observablePersonList.stream().filter(p -> p.getId().equals(key)).findFirst().orElse(null);
     }
     
     public Boolean remove(Person p){

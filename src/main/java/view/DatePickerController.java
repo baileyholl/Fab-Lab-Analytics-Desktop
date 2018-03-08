@@ -40,6 +40,9 @@ public class DatePickerController implements Initializable {
     }
 
     private void requestData() {
+        //TODO Implement range queries here
+
+
     }
 
     public void setRoot(Parent root){
@@ -62,7 +65,7 @@ public class DatePickerController implements Initializable {
         stage.show();
     }
 
-    public void close(){
+    private void close(){
         datePicker1.setValue(null);
         datePicker2.setValue(null);
         datePicker3.setValue(null);

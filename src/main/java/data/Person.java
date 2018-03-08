@@ -1,26 +1,34 @@
 package data;
 
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.joda.time.DateTime;
 import util.FileManager;
+import security.SecureString;
+import data.Certification;
 
+import java.security.NoSuchAlgorithmException;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class Person{
+public class Person {
 
-    private StringProperty cardNumber;
+
     private SimpleStringProperty id;
     private SimpleStringProperty name;
     private SimpleStringProperty email;
     /*Lab Certification*/
-    private SimpleStringProperty certifications;
-    private SimpleStringProperty shopCertification;
+    private ArrayList<Certification> certifications;
     private SimpleStringProperty notes;
     private SimpleStringProperty signedWaiver;
     private transient SimpleStringProperty timestamp;
@@ -28,13 +36,11 @@ public class Person{
     private SimpleStringProperty strikes;
     private ArrayList<Timestamp> timeStampHistory;
 
-    public Person(String cardNumber, String ID, String name, String email, String certifications, String shopCertification, String notes, String strikes, String signedWaiver){
-        this.cardNumber = new SimpleStringProperty(cardNumber);
+    public Person(String ID, String name, String email, String notes, String strikes, String signedWaiver) {
         this.id = new SimpleStringProperty(ID);
         this.name = new SimpleStringProperty(name);
         this.email = new SimpleStringProperty(email);
-        this.certifications = new SimpleStringProperty(certifications);
-        this.shopCertification  = new SimpleStringProperty(shopCertification);
+        this.certifications = new ArrayList<>();
         this.notes = new SimpleStringProperty(notes);
         this.timestamp = new SimpleStringProperty(Timestamp.getCurrentTime());
         this.timesVisited = new SimpleStringProperty("0");
@@ -43,7 +49,20 @@ public class Person{
         this.signedWaiver = new SimpleStringProperty(signedWaiver);
     }
 
-    public void incrementTimesVisited(){
+    public Person(String id, String name, String email, ArrayList<Certification> certifications, String notes, String signedWaiver, String timestamp, String timesVisited, String strikes, ArrayList<Timestamp> timeStampHistory) {
+        this.id = new SimpleStringProperty(id);
+        this.name = new SimpleStringProperty(name);
+        this.email = new SimpleStringProperty(email);
+        this.certifications = certifications;
+        this.notes = new SimpleStringProperty(notes);
+        this.signedWaiver = new SimpleStringProperty(signedWaiver);
+        this.timestamp = new SimpleStringProperty(timestamp);
+        this.timesVisited = new SimpleStringProperty(timesVisited);
+        this.strikes = new SimpleStringProperty(strikes);
+        this.timeStampHistory = timeStampHistory;
+    }
+
+    public void incrementTimesVisited() {
         timesVisited = new SimpleStringProperty(String.valueOf(Integer.valueOf(getTimesVisited()) + 1));
         FileManager.saveDirectoryJsonFile(this);
     }
@@ -64,12 +83,56 @@ public class Person{
         return email;
     }
 
-    public String getCertifications() {
-        return certifications.get();
+    public ArrayList<Certification> getCertifications() {
+        return certifications;
     }
 
-    public SimpleStringProperty certificationsProperty() {
-        return certifications;
+    public SimpleStringProperty labCertificationProperty(){
+        if (certifications==null || certifications.isEmpty()){
+            //no certs on file
+            return new SimpleStringProperty("");
+        } else {
+            StringBuilder sb = new StringBuilder();
+            List<Certification> labCerts = certifications.stream()
+                    .filter(c -> !c.isShopCert() && !c.isExpired())
+                    .collect(Collectors.toList());
+            for (Certification c : labCerts) {
+                if (labCerts.indexOf(c) == (labCerts.size() - 1)) {
+                    sb.append(c.getCertName());
+                } else {
+                    sb.append(c.getCertName());
+                    sb.append(", ");
+                }
+
+            }
+            return new SimpleStringProperty(sb.toString());
+        }
+    }
+
+    public SimpleStringProperty shopCertificationProperty(){
+        StringBuilder sb = new StringBuilder();
+        if (certifications==null || certifications.isEmpty()){
+            //no certs on file
+            return new SimpleStringProperty("");
+        } else {
+            List<Certification> labCerts = certifications.stream()
+                    .filter(c -> c.isShopCert() && !c.isExpired())
+                    .collect(Collectors.toList());
+            for (Certification c : labCerts) {
+                if (labCerts.indexOf(c) == (labCerts.size() - 1)) {
+                    sb.append(c.getCertName());
+                } else {
+                    sb.append(c.getCertName());
+                    sb.append(", ");
+                }
+
+            }
+            return new SimpleStringProperty(sb.toString());
+        }
+    }
+
+    public void setCertifications(ArrayList<Certification> certs){
+        this.certifications = certs;
     }
 
     public String getNotes() {
@@ -81,14 +144,6 @@ public class Person{
     }
 
 
-    public String getCardNumber() {
-        return cardNumber.get();
-    }
-
-    public StringProperty cardNumberProperty() {
-        return cardNumber;
-    }
-
     public String getTimestamp() {
         return timestamp.get();
     }
@@ -96,10 +151,12 @@ public class Person{
     public SimpleStringProperty timestampProperty() {
         return timestamp;
     }
-    public void setTimestampProperty(SimpleStringProperty simpleStringProperty){
+
+    public void setTimestampProperty(SimpleStringProperty simpleStringProperty) {
         this.timestamp = simpleStringProperty;
     }
-    public void setTimestampProperty(String string){
+
+    public void setTimestampProperty(String string) {
         this.timestamp = new SimpleStringProperty(string);
     }
 
@@ -119,11 +176,11 @@ public class Person{
         return timesVisited;
     }
 
-    public void setTimesVisitedProperty(String string){
+    public void setTimesVisitedProperty(String string) {
         this.timesVisited = new SimpleStringProperty(string);
     }
 
-    public void setStrikesProperty(String string){
+    public void setStrikesProperty(String string) {
         this.strikes = new SimpleStringProperty(string);
     }
 
@@ -135,25 +192,6 @@ public class Person{
         return strikes;
     }
 
-    public String getShopCertification() {
-        if(shopCertification == null){
-            setShopCertification("");
-        }
-        return shopCertification.get();
-    }
-
-    public SimpleStringProperty shopCertificationProperty() {
-        return shopCertification;
-    }
-
-    public void setShopCertification(String shopCertification) {
-        if(this.shopCertification == null){
-            this.shopCertification = new SimpleStringProperty();
-        }
-        this.shopCertification.set(shopCertification);
-    }
-
-
     public ArrayList<Timestamp> getTimeStampHistory() {
         return timeStampHistory;
     }
@@ -163,7 +201,7 @@ public class Person{
     }
 
     public String getSignedWaiver() {
-        if(signedWaiver == null){
+        if (signedWaiver == null) {
             setSignedWaiver("No");
         }
         return signedWaiver.get();
@@ -174,28 +212,48 @@ public class Person{
     }
 
     public void setSignedWaiver(String signedWaiver) {
-        if(this.signedWaiver == null){
+        if (this.signedWaiver == null) {
             this.signedWaiver = new SimpleStringProperty();
         }
         this.signedWaiver.set(signedWaiver);
     }
 
+    public String getHashedID() {
+        SecureString hashed = null;
+        try {
+            hashed = new SecureString(id.get());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return hashed.getContents();
+    }
+
     @Override
     public String toString() {
-        return getId() + getStrikes() + getTimesVisited() + getName() + getCardNumber() + getCertifications() + getEmail() + getShopCertification() + getTimeStampHistory() + getSignedWaiver();
+        return "Person{" +
+                ", id=" + id +
+                ", name=" + name +
+                ", email=" + email +
+                ", certifications=" + certifications +
+                ", notes=" + notes +
+                ", signedWaiver=" + signedWaiver +
+                ", timestamp=" + timestamp +
+                ", timesVisited=" + timesVisited +
+                ", strikes=" + strikes +
+                ", timeStampHistory=" + timeStampHistory +
+                '}';
     }
 
     /**
      * Sets the data of this object to the data from the given person.
+     *
      * @param p Set of data to set this person object to.
      */
     public void set(Person p) {
-        this.cardNumber = p.cardNumber;
         this.id = p.id;
         this.name = p.name;
         this.email = p.email;
         this.certifications = p.certifications;
-        this.shopCertification  = p.shopCertification;
         this.notes = p.notes;
         this.timestamp = p.timestamp;
         this.timesVisited = p.timesVisited;
@@ -204,53 +262,27 @@ public class Person{
         this.signedWaiver = p.signedWaiver;
     }
 
-    /**
-     * Need to regenerate after changes to Person class
-     * @return
-     */
-    @Override
-    public int hashCode() {
-        int result = cardNumber != null ? cardNumber.hashCode() : 0;
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (certifications != null ? certifications.hashCode() : 0);
-        result = 31 * result + (shopCertification != null ? shopCertification.hashCode() : 0);
-        result = 31 * result + (notes != null ? notes.hashCode() : 0);
-        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
-        result = 31 * result + (timesVisited != null ? timesVisited.hashCode() : 0);
-        result = 31 * result + (strikes != null ? strikes.hashCode() : 0);
-        result = 31 * result + (timeStampHistory != null ? timeStampHistory.hashCode() : 0);
-        result = 31 * result + (signedWaiver != null ? signedWaiver.hashCode() : 0);
-        return result;
-    }
-
-    /**
-     * Need to regenerate after changes to Person class
-     * @return
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Person person = (Person) o;
+        return Objects.equals(id, person.id) &&
+                Objects.equals(name, person.name) &&
+                Objects.equals(email, person.email) &&
+                Objects.equals(certifications, person.certifications) &&
+                Objects.equals(notes, person.notes) &&
+                Objects.equals(signedWaiver, person.signedWaiver) &&
+                Objects.equals(timestamp, person.timestamp) &&
+                Objects.equals(timesVisited, person.timesVisited) &&
+                Objects.equals(strikes, person.strikes) &&
+                Objects.equals(timeStampHistory, person.timeStampHistory);
+    }
 
-        if (cardNumber != null ? !cardNumber.equals(person.cardNumber) : person.cardNumber != null) return false;
-        if (id != null ? !id.equals(person.id) : person.id != null) return false;
-        if (name != null ? !name.equals(person.name) : person.name != null) return false;
-        if (email != null ? !email.equals(person.email) : person.email != null) return false;
-        if (certifications != null ? !certifications.equals(person.certifications) : person.certifications != null)
-            return false;
-        if (shopCertification != null ? !shopCertification.equals(person.shopCertification) : person.shopCertification != null)
-            return false;
-        if (notes != null ? !notes.equals(person.notes) : person.notes != null) return false;
-        if (signedWaiver != null ? !signedWaiver.equals(person.signedWaiver) : person.signedWaiver != null)
-            return false;
-        if (timestamp != null ? !timestamp.equals(person.timestamp) : person.timestamp != null) return false;
-        if (timesVisited != null ? !timesVisited.equals(person.timesVisited) : person.timesVisited != null)
-            return false;
-        if (strikes != null ? !strikes.equals(person.strikes) : person.strikes != null) return false;
-        return timeStampHistory != null ? timeStampHistory.equals(person.timeStampHistory) : person.timeStampHistory == null;
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, name, email, certifications, notes, signedWaiver, timestamp, timesVisited, strikes, timeStampHistory);
     }
 }
+
